@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Person } from '../person';
 import { DataService } from '../data.service';
+import { LoginService } from '../login.service';
 import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-dashboard',
@@ -11,18 +12,11 @@ export class DashboardComponent implements OnInit {
 
 
 
-  constructor(private dataService: DataService, private cookie: CookieService) {}
+  constructor(private dataService: DataService, private cookie: CookieService, private loginService: LoginService) {}
 
 
   ngOnInit(): void {
-    if(this.cookie.get('person_id')==''){
-      console.log("No Cookie");
-      window.location.href="/login";
-    }
-    else{
-      // console.log(this.cookie.get('person_id'));
-      console.log("Cookie there");
-    }
+    this.loginService.checkLoginFromDashboard();
   }
 
 }

@@ -1,0 +1,42 @@
+<div class="text-center">
+  <h3>Add Table Form</h3>
+  </div>
+  <div [hidden]="submitted">
+      <form (ngSubmit)="addTable()">
+
+
+
+        <div class="form-group">
+          <label for="table_type">Table Type</label>
+          <input type="text" class="form-control" id="table_type" required
+          [(ngModel)]="table.table_type" name="table_type">
+        </div>
+
+        <div class="form-group">
+          <label for="price">Price</label>
+          <input type="number" class="form-control" id="price" required
+          [(ngModel)]="table.price" name="price">
+        </div>
+
+        <div class="form-group">
+          <label for="capacity">Capacity</label>
+          <input type="number" class="form-control" id="capacity" required
+          [(ngModel)]="table.capacity" name="capacity">
+        </div>
+
+        <div class="btn-group">
+      <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
+        <button type="submit" class="btn btn-success">Submit</button>
+      <!-- <button class="btn btn-danger" (click)="delete()">Delete</button> -->
+      </div>
+
+      </form>
+  </div>
+
+  <div [hidden]="!submitted">
+      <h4>Update successfully!</h4>
+      <div class="btn-group">
+        <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
+        <!-- <button class="btn btn-success" (click)="submitted=false">Edit</button> -->
+      </div>
+  </div>

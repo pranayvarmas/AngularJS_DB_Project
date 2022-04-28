@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Person } from '../person';
 import { DataService } from '../data.service';
 import { CookieService } from 'ngx-cookie-service';
+import { LoginService } from '../login.service';
 // import { ConsoleReporter } from 'jasmine';
 
 @Component({
@@ -13,47 +14,43 @@ import { CookieService } from 'ngx-cookie-service';
 export class LoginComponent implements OnInit {
   person = new Person();
   submitted = false;
+  x="";
   email="";
   password="";
-  constructor(private dataService: DataService, private cookie: CookieService) {}
+  constructor(private dataService: DataService, private cookie: CookieService, private loginService: LoginService) {}
 
   checkPerson() {
-     return this.dataService.checkPerson(this.email, this.password).then(person => this.person = person)
+     return this.dataService.checkPerson(this.email, this.password).then(person => this.x = person)
      .then (response =>{
-       if(response.person_id==0){
-        alert("Email or Password is Incorrect");
+       var y=JSON.parse(JSON.stringify(response));
+       if(y=={}){
+        console.log("empty");
        }
-       else{
-         this.submitted=true;
-         var date = new Date();
-        // date.setTime(date.getTime()+(10*60*1000));
-        date.setTime(date.getTime()+(5*1000));
-        this.cookie.set( 'person_id', response.person_id.toString(), date);
-        this.cookie.set( 'person_name', response.person_name.toString(), date);
-        this.cookie.set( 'person_type', response.person_type.toString(), date);
-        this.cookie.set( 'type_from', response.type_from.toString(), date);
-        this.cookie.set( 'type_to', response.type_to.toString(), date);
-        this.cookie.set( 'address', response.address.toString(), date);
-        this.cookie.set( 'phone_no', response.phone_no.toString(), date);
-        this.cookie.set( 'salary', response.salary.toString(), date);
-        this.cookie.set( 'email', response.email.toString(), date);
-        window.location.href="/dashboard";
-        // this.cookie.set( 'password', response.person_id.toString());
+       else if(y.userExists==false){
+          this.submitted=false;
+          alert("Email or Password is Incorrect");
+       }
+       else if(y.userExists==true){
+          this.submitted=true;
+          var date = new Date();
+          // date.setTime(date.getTime()+(10*60*1000));
+          date.setTime(date.getTime()+(10*60*1000));
+          this.cookie.set( 'person_id', y.data[0]['person_id'].toString(), date);
+          this.cookie.set( 'person_name', y.data[0]['person_name'].toString(), date);
+          this.cookie.set( 'person_type', y.data[0]['person_type'].toString(), date);
+          this.cookie.set( 'type_from', y.data[0]['type_from'].toString(), date);
+          this.cookie.set( 'type_to', y.data[0]['type_to'].toString(), date);
+          this.cookie.set( 'address', y.data[0]['address'].toString(), date);
+          this.cookie.set( 'phone_no', y.data[0]['phone_no'].toString(), date);
+          this.cookie.set( 'salary', y.data[0]['salary'].toString(), date);
+          this.cookie.set( 'email', y.data[0]['email'].toString(), date);
+          window.location.href="/dashboard";
        }
      })
   }
 
   ngOnInit(): void {
-    //  this.getCustomers();
-    console.log(this.cookie.get('person_id'));
-    if(this.cookie.get('person_id')==''){
-      console.log("No Cookie");
-    }
-    else{
-      // console.log(this.cookie.get('person_id'));
-      console.log("Cookie there");
-      window.location.href="/dashboard";
-    }
+    this.loginService.checkLoginFromLogin();
   }
 
 }

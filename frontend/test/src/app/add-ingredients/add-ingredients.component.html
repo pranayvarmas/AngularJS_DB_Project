@@ -1,0 +1,40 @@
+<div class="text-center">
+  <h3>Add Ingredient Form</h3>
+  </div>
+  <div [hidden]="submitted">
+      <form (ngSubmit)="addIngredient()">
+
+        <div class="form-group">
+          <label for="ing_name">Ing Name</label>
+          <input type="text" class="form-control" id="ing_name" required
+          [(ngModel)]="ing.ing_name" name="ing_name">
+        </div>
+
+        <div class="form-group">
+          <label for="price">Price</label>
+          <input type="number" class="form-control" id="price" required
+          [(ngModel)]="ing.price" name="price">
+        </div>
+
+        <div class="form-group">
+          <label for="availability">Availability</label>
+          <input type="number" class="form-control" id="availability" required
+          [(ngModel)]="ing.availability" name="availability">
+        </div>
+
+        <div class="btn-group">
+      <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
+        <button type="submit" class="btn btn-success">Submit</button>
+      <!-- <button class="btn btn-danger" (click)="delete()">Delete</button> -->
+      </div>
+
+      </form>
+  </div>
+
+  <div [hidden]="!submitted">
+      <h4>Update successfully!</h4>
+      <div class="btn-group">
+        <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
+        <!-- <button class="btn btn-success" (click)="submitted=false">Edit</button> -->
+      </div>
+  </div>

@@ -25,6 +25,9 @@ CREATE TABLE items (
   price INT,
   PRIMARY KEY(item_id)
 );
+CREATE SEQUENCE items_seq START WITH 7000 INCREMENT BY 1;
+alter table items alter item_id set default nextval('items_seq');
+
 
 ------------Ingredients information-------
 CREATE TABLE ingredients(
@@ -34,6 +37,8 @@ CREATE TABLE ingredients(
   price INT,
   PRIMARY KEY(ing_id) 
 );  
+CREATE SEQUENCE ings_seq START WITH 7000 INCREMENT BY 1;
+alter table ingredients alter ing_id set default nextval('ings_seq');
 
 
 ---------------Persons information------------
@@ -50,6 +55,10 @@ CREATE TABLE persons (
  password TEXT,
  PRIMARY KEY(person_id)
 );
+
+CREATE SEQUENCE persons_seq START WITH 7000 INCREMENT BY 1;
+alter table persons alter person_id set default nextval('persons_seq');
+
 
 ----------Purchases information-----------------
 CREATE TABLE purchases(
@@ -69,6 +78,9 @@ CREATE TABLE tables(
  price INT,
  PRIMARY KEY(table_id)
 );
+CREATE SEQUENCE tables_seq START WITH 7000 INCREMENT BY 1;
+alter table tables alter table_id set default nextval('tables_seq');
+
 
 ----------------delivery persons information-----------
 CREATE TABLE delivery_persons(
@@ -150,6 +162,10 @@ CREATE TABLE coupons(
  end_date  DATE,
  PRIMARY KEY(coupon_id)
 );
+
+CREATE SEQUENCE coupons_seq START WITH 7000 INCREMENT BY 1;
+alter table coupons alter coupon_id set default nextval('coupons_seq');
+
 
 
 --------------------cancellations information-------------

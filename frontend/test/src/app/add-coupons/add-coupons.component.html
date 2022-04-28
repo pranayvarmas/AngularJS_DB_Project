@@ -1,0 +1,51 @@
+<div class="text-center">
+  <h3>Add Coupon Form</h3>
+  </div>
+  <div [hidden]="submitted">
+      <form (ngSubmit)="addCoupon()">
+
+        <div class="form-group">
+          <label for="coupon_txt">Coupon Text</label>
+          <input type="text" class="form-control" id="coupon_txt" required
+          [(ngModel)]="coupon.coupon_txt" name="coupon_txt">
+        </div>
+
+        <div class="form-group">
+          <label for="coupon_type">Coupon Type</label>
+          <input type="text" class="form-control" id="coupon_type" required
+          [(ngModel)]="coupon.coupon_type" name="coupon_type">
+        </div>
+
+        <div class="form-group">
+          <label for="availability">Availability</label>
+          <input type="number" class="form-control" id="availability" required
+          [(ngModel)]="coupon.availability" name="availability">
+        </div>
+
+        <div class="form-group">
+          <label for="start_date">Start Date</label>
+          <input type="date" class="form-control" id="start_date" required
+          [(ngModel)]="coupon.start_date" name="start_date">
+        </div>
+
+        <div class="form-group">
+          <label for="end_date">End Date</label>
+          <input type="date" class="form-control" id="end_date" required
+          [(ngModel)]="coupon.end_date" name="end_date">
+        </div>
+        <div class="btn-group">
+      <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
+        <button type="submit" class="btn btn-success">Submit</button>
+      <!-- <button class="btn btn-danger" (click)="delete()">Delete</button> -->
+      </div>
+
+      </form>
+  </div>
+
+  <div [hidden]="!submitted">
+      <h4>Update successfully!</h4>
+      <div class="btn-group">
+        <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
+        <!-- <button class="btn btn-success" (click)="submitted=false">Edit</button> -->
+      </div>
+  </div>

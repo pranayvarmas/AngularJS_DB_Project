@@ -11,10 +11,18 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { DataService } from './data.service';
+// import { LoginService } from './login.service';
 import { Person } from './person';
 
 import {enableProdMode} from '@angular/core';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ShowItemsComponent } from './show-items/show-items.component';
+import { LoginService } from './login.service';
+import { AddItemsComponent } from './add-items/add-items.component';
+import { AddIngredientsComponent } from './add-ingredients/add-ingredients.component';
+import { AddPersonsComponent } from './add-persons/add-persons.component';
+import { AddCouponsComponent } from './add-coupons/add-coupons.component';
+import { AddTablesComponent } from './add-tables/add-tables.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +30,13 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HomeComponent,
     LoginComponent,
     SignupComponent,
-    DashboardComponent
+    DashboardComponent,
+    ShowItemsComponent,
+    AddItemsComponent,
+    AddIngredientsComponent,
+    AddPersonsComponent,
+    AddCouponsComponent,
+    AddTablesComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +46,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HttpClientModule,
     // CookieService
   ],
-  providers: [DataService],
+  providers: [DataService, LoginService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
