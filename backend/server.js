@@ -33,7 +33,7 @@ const { Client } = require('pg');
 const e = require('express');
     // const client = new Client({host:'arjuna.db.elephantsql.com', port:5432, user:'eyatqyqu', password:'mnHq4s0lDXsV8VR54tRmEL-PWzxOdmkX', database:'eyatqyqu',})
     
-    const client = new Client({host:'localhost', port:5432, user:'test', password:'test', database:'test',})
+    const client = new Client({host:'localhost', port:5432, user:'postgres', password:'pgadmin', database:'adepu',})
     client.connect()
         .then(() => {
             // Client is now connected
@@ -78,6 +78,36 @@ app.get('/login/:email/:password', function(req, res) {
 
 app.get('/items', function(req, res) {
     q=mysql.format("select * from items order by item_id;");
+    // console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    itemsExists:false,
+                    data:[]
+                })
+            }
+            else{
+                res.send({
+                    success:true,
+                    itemsExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+app.get('/ingredients', function(req, res) {
+    q=mysql.format("select * from ingredients order by ing_id;");
     // console.log(q);
     client.query(q, (err1, res1) =>{
         if(err1){
@@ -295,7 +325,275 @@ app.post('/add_ing', function(req, res, next) {
         }
     })
 })
+///////////////////////////////////////////////////
+app.get('/items', function (req, res) {
+    // res.send('Hello World');
+    q="select distinct item_name from items";
+    client.query(q, (err1, res1) => {
+        if(err1){
+            console.log(err.stack);
+          }else{
+            x=res1.rows;
+            console.log(res1.rows[3]);
+            res.send(x);
+          }
+    })
+})
+app.get('/ingredients', function (req, res) {
+    // res.send('Hello World');
+    q="select distinct ing_name from ingredients";
+    client.query(q, (err1, res1) => {
+        if(err1){
+            console.log(err1.stack);
+          }else{
+            x=res1.rows;
+            console.log(res1.rows[3]);
+            res.send(x);
+          }
+    })
+})
+app.get('/login:usrr', function (req, res) {
+    // res.send('Hello World');
+    q=" Select * from persons where email = 'input_email' and password = 'input_password' ";
+    client.query(q, (err1, res1) => {
+        if(err1){
+            console.log(err1.stack);
+          }else{
+            x=res1.rows;
+            console.log(x.length);
+            if(x.length!=0){
+                console.log(res1.rows);
+                res.send({
+                    userExists: true,
+                    data: x
+                });
+            }
+            else{
+                res.send({
+                    userExists: false,
+                    data: []
+                });
+            }
+          }
+    })
+})
+app.get('/staff', function (req, res) {
+    // res.send('Hello World');
+    q="select distinct person_name from persons";
+    client.query(q, (err1, res1) => {
+        if(err1){
+            console.log(err1.stack);
+          }else{
+            x=res1.rows;
+            console.log(res1.rows[3]);
+            res.send(x);
+          }
+    })
+})
+app.get('/items_left', function (req, res) {
+    // res.send('Hello World');
+    q="Select * from items where availability > 0 order by item_id limit 100";
+    client.query(q, (err1, res1) => {
+        if(err1){
+            console.log(err1.stack);
+          }else{
+            x=res1.rows;
+            console.log(res1.rows[3]);
+            res.send(x);
+          }
+    })
+})
 
+app.get('/coupons', function (req, res) {
+    // res.send('Hello World');
+    const q={
+        text:"Select * from coupons  limit 10"
+    }
+    client.query(q, (err1, res1) => {
+        if(err1){
+            console.log(err1.stack);
+          }else{
+            x=res1.rows;
+            console.log(res1.rows[3]);
+            res.send(x);
+          }
+    })
+})
+app.get('/purchases', function (req, res) {
+    // res.send('Hello World');
+    q="Select * from purchases  limit 5";
+    const q1={
+        text: "Select * from purchases  limit 5"
+    }
+    client.query(q1, (err1, res1) => {
+        if(err1){
+            console.log(err1.stack);
+          }else{
+            x=res1.rows;
+            console.log(res1.rows[3]);
+            res.send(x);
+          }
+    })
+})
+app.get('/tables', function (req, res) {
+    // res.send('Hello World');
+    q="Select * from tables  limit 5";
+    client.query(q, (err1, res1) => {
+        if(err1){
+            console.log(err1.stack);
+          }else{
+            x=res1.rows;
+            console.log(res1.rows[3]);
+            res.send(x);
+          }
+    })
+})
+app.post('/add_items', function(req, res,next){
+    var inp=JSON.parse(Object.keys(req.body)[0]);
+    // var inp=req.body;
+    //q1="insert into venue(venue_name, city_name, country_name, capacity) values ("+"'"+inp['venue_name']+"'"+','+"'"+inp['city_name']+"'"+','+"'"+inp['country_name']+"'"+','+inp['capacity']+')';
+    //console.log(q1);
+    const q2 = {
+        text: 'INSERT INTO items(item_name, item_type, availability,price) VALUES($1, $2,$3,$4)',
+        values: [inp[item_name], inp[item_type],inp[availability],inp[price]],
+      }
+    client.query(q2, (err0, res0) =>{
+        if(err0){
+            console.log(err0 ? err0.stack : res0.rows) // Hello World!
+            res.send({
+                success:false,
+                data: err0.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            });
+        }
+    })
+})
+app.post('/add_ingredients', function(req, res,next){
+    var inp=JSON.parse(Object.keys(req.body)[0]);
+    // var inp=req.body;
+    //q1="insert into venue(venue_name, city_name, country_name, capacity) values ("+"'"+inp['venue_name']+"'"+','+"'"+inp['city_name']+"'"+','+"'"+inp['country_name']+"'"+','+inp['capacity']+')';
+    //console.log(q1);
+    const q2 = {
+        text: 'INSERT INTO ingredients(ing_name, availability,price) VALUES($1, $2,$3)',
+        values: [inp[ing_name], inp[availability],inp[price]],
+      }
+    client.query(q2, (err0, res0) =>{
+        if(err0){
+            console.log(err0 ? err0.stack : res0.rows) // Hello World!
+            res.send({
+                success:false,
+                data: err0.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            });
+        }
+    })
+})
+app.post('/add_staff', function(req, res,next){
+    var inp=JSON.parse(Object.keys(req.body)[0]);
+    // var inp=req.body;
+    //q1="insert into venue(venue_name, city_name, country_name, capacity) values ("+"'"+inp['venue_name']+"'"+','+"'"+inp['city_name']+"'"+','+"'"+inp['country_name']+"'"+','+inp['capacity']+')';
+    //console.log(q1);
+    const q2 = {
+        text: 'INSERT INTO persons(person_name, person_type, type_from,type_to,address,phone_no,salary,email,password) VALUES($1,$2,$3,$4,S5,$6,$7,$8,$9)',
+        values: [inp[person_name], inp[person_type],inp[type_from],inp[type_to],inp[address],inp[phone_no],inp[salary],inp[email],inp[password]],
+      }
+    client.query(q2, (err0, res0) =>{
+        if(err0){
+            console.log(err0 ? err0.stack : res0.rows) // Hello World!
+            res.send({
+                success:false,
+                data: err0.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            });
+        }
+    })
+})
+app.post('/add_coupons', function(req, res,next){
+    var inp=JSON.parse(Object.keys(req.body)[0]);
+    // var inp=req.body;
+    //q1="insert into venue(venue_name, city_name, country_name, capacity) values ("+"'"+inp['venue_name']+"'"+','+"'"+inp['city_name']+"'"+','+"'"+inp['country_name']+"'"+','+inp['capacity']+')';
+    //console.log(q1);
+    const q2 = {
+        text: 'INSERT INTO coupons(coupon_txt,coupon_type,availability,start_date,end_date) VALUES($1,$2,$3,$4,S5)',
+        values: [inp[coupon_txt],inp[coupon_type],inp[availability],inp[start_date],inp[end_date]],
+      }
+    client.query(q2, (err0, res0) =>{
+        if(err0){
+            console.log(err0 ? err0.stack : res0.rows) // Hello World!
+            res.send({
+                success:false,
+                data: err0.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            });
+        }
+    })
+})
+app.post('/delete_coupons', function(req, res,next){
+    //get the coupon id from frontend
+    var inp=JSON.parse(Object.keys(req.body)[0]);
+    // var inp=req.body;
+    //q1="insert into venue(venue_name, city_name, country_name, capacity) values ("+"'"+inp['venue_name']+"'"+','+"'"+inp['city_name']+"'"+','+"'"+inp['country_name']+"'"+','+inp['capacity']+')';
+    //console.log(q1);
+    const q2 = {
+        text: 'INSERT INTO items(item_name, item_type, availability,price) VALUES($1, $2,$3,$4)',
+        values: [inp[item_name], inp[item_type],inp[availability],inp[price]],
+      }
+    client.query(q2, (err0, res0) =>{
+        if(err0){
+            console.log(err0 ? err0.stack : res0.rows) // Hello World!
+            res.send({
+                success:false,
+                data: err0.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            });
+        }
+    })
+})
+app.post('/add_dp', function(req, res,next){
+    var inp=JSON.parse(Object.keys(req.body)[0]);
+    // var inp=req.body;
+    //q1="insert into venue(venue_name, city_name, country_name, capacity) values ("+"'"+inp['venue_name']+"'"+','+"'"+inp['city_name']+"'"+','+"'"+inp['country_name']+"'"+','+inp['capacity']+')';
+    //console.log(q1);
+    const q2 = {
+        text: 'INSERT INTO delivery_persons(dp_name,rating,primary_no,secondary_no,phone_no,salary) VALUES($1,$2,$3,$4,S5,$6)',
+        values: [inp[dp_name],inp[rating],inp[primary_no],inp[secondary_no],inp[phone_no],inp[salary]],
+      }
+    client.query(q2, (err0, res0) =>{
+        if(err0){
+            console.log(err0 ? err0.stack : res0.rows) // Hello World!
+            res.send({
+                success:false,
+                data: err0.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            });
+        }
+    })
+})
+//////////////////////////////////////////////////////////////////////////
 var server = app.listen(3030, function () {
    var host = server.address().address
    var port = server.address().port
