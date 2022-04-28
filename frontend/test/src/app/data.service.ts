@@ -39,6 +39,52 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
+  getCouponsPerson(id:number): Promise<string> {
+    const url = `${this.customersUrl}coupons_person/${id}`;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Coupons Person Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+
+  getCart(id:number): Promise<string> {
+    const url = `${this.customersUrl}cart/${id}`;
+    console.log(id);
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Cart Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+
+  getCheckout(id:number): Promise<string> {
+    const url = `${this.customersUrl}checkout/${id}`;
+    console.log(id);
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Checkout Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
   checkPerson(email:string, password:string): Promise<string> {
     const url = `${this.customersUrl}login`;
     return this.http.get(url+"/"+email+"/"+password)
@@ -134,6 +180,21 @@ export class DataService {
   }
   deleteItem(id:number): Promise<string> {
     const url = `${this.customersUrl}delete_item/${id}`;
+    return this.http.delete(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("deleteItem Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+
+  deleteCart(person_id:number, item_id:number): Promise<string> {
+    const url = `${this.customersUrl}delete_cart/${person_id}/${item_id}`;
     return this.http.delete(url)
                .toPromise()
                .then(response => {

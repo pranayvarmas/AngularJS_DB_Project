@@ -7,6 +7,8 @@ import { AddIngredientsComponent } from './add-ingredients/add-ingredients.compo
 import { AddItemsComponent } from './add-items/add-items.component';
 import { AddTablesComponent } from './add-tables/add-tables.component';
 import { AddPersonsComponent } from './add-persons/add-persons.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { CartComponent } from './cart/cart.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -21,6 +23,9 @@ const routes: Routes = [
    { path: 'add_ingredient', component: AddIngredientsComponent },
    { path: 'add_person', component: AddPersonsComponent },
    { path: 'add_table', component: AddTablesComponent },
+   { path: 'cart', component: CartComponent },
+   { path: 'checkout', component: CheckoutComponent },
+
 ];
 
 @NgModule({

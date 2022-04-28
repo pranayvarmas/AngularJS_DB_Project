@@ -190,6 +190,18 @@ CREATE TABLE item_ing(
   FOREIGN KEY(item_id) references items on delete set null,
   FOREIGN KEY(ing_id) references ingredients on delete set null
 );
+
+
+----------------Cart---------------------------------------
+
+CREATE TABLE cart(
+  person_id INT,
+  item_id INT,
+  quantity INT,
+  PRIMARY KEY(person_id, item_id),
+  FOREIGN KEY(person_id) references persons on delete set null,
+  FOREIGN KEY(item_id) references items on delete set null
+);
 ---------------Purchased ingredients-----------------------
 CREATE TABLE pur_ing(
  purchase_id INT,

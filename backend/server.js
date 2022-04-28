@@ -106,6 +106,105 @@ app.get('/items', function(req, res) {
         }
     })
 })
+
+app.get('/cart/:id', function(req, res) {
+    var id=req.params.id;
+    console.log(id);
+    q=mysql.format("select * from cart where person_id = ? order by item_id;", id);
+    console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    itemsExists:false,
+                    data:[]
+                })
+            }
+            else{
+                res.send({
+                    success:true,
+                    itemsExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+
+app.get('/coupons_person/:id', function(req, res) {
+    var id=req.params.id;
+    console.log(id);
+    q=mysql.format("select * from coupons_users, coupons where person_id = ? and coupons_users.coupon_id=coupons.coupon_id order by coupons.coupon_id;", id);
+    console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    couponsExists:false,
+                    data:[]
+                })
+            }
+            else{
+                res.send({
+                    success:true,
+                    couponsExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+
+app.get('/checkout/:id', function(req, res) {
+    var id=req.params.id;
+    console.log(id);
+    q=mysql.format("select items.item_id, item_name, person_id, price, availability, quantity, item_type from cart, items where person_id = ? and items.item_id=cart.item_id order by items.item_id;", id);
+    console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    itemsExists:false,
+                    data:[]
+                })
+            }
+            else{
+                res.send({
+                    success:true,
+                    itemsExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
     // app.post('/venues/add', function(req, res, next){
     //     // console.log(req.json());
     //     var inp=JSON.parse(Object.keys(req.body)[0]);
@@ -132,7 +231,7 @@ app.post('/item_to_cart', function(req, res, next) {
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var inp = req.body;
     q=mysql.format("insert into cart(person_id, item_id, quantity) values (?, ?, ?)", [inp['person_id'], inp['item_id'], inp['quantity']]);
-    // console.log(q);
+    console.log(q);
     client.query(q, (err1, res1) =>{
         if(err1){
             console.error(err1.stack);
@@ -258,6 +357,29 @@ app.delete('/delete_item/:id', function(req, res, next) {
     console.log(id);
     console.log(id);
     q=mysql.format("delete from items where item_id = ?", id);
+    console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false,
+                data:err1.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            })
+        }
+    })
+})
+app.delete('/delete_cart/:person_id/:item_id', function(req, res, next) {
+    // var inp=JSON.parse(Object.keys(req.body)[0]);
+    var person_id = req.params.person_id;
+    var item_id = req.params.item_id;
+    // console.log(id);
+    // console.log(id);
+    q=mysql.format("delete from cart where item_id = ? and person_id = ?", [item_id, person_id]);
     console.log(q);
     client.query(q, (err1, res1) =>{
         if(err1){

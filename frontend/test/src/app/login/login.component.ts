@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
           this.submitted=true;
           var date = new Date();
           // date.setTime(date.getTime()+(10*60*1000));
-          date.setTime(date.getTime()+(10*60*1000));
+          date.setTime(date.getTime()+(100*60*1000));
           this.cookie.set( 'person_id', y.data[0]['person_id'].toString(), date);
           this.cookie.set( 'person_name', y.data[0]['person_name'].toString(), date);
           this.cookie.set( 'person_type', y.data[0]['person_type'].toString(), date);

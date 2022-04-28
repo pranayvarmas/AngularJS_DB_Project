@@ -1,25 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { Item } from '../item';
+import { Coupon } from '../coupon';
+import { Cart } from '../cart';
 import { CookieService } from 'ngx-cookie-service';
 import { LoginService } from '../login.service';
+import { CouponsUsers } from '../coupons_users';
 
 @Component({
-  selector: 'app-show-items',
-  templateUrl: './show-items.component.html',
-  styleUrls: ['./show-items.component.css']
+  selector: 'app-checkout',
+  templateUrl: './checkout.component.html',
+  styleUrls: ['./checkout.component.css']
 })
-export class ShowItemsComponent implements OnInit {
-  items: Item[]=[]
-  uItems: Item[]=[]
+export class CheckoutComponent implements OnInit {
+  items: Cart[]=[]
+  coupons: CouponsUsers[]=[]
+  uItems: Cart[]=[]
   x="";
-  uItem=new Item;
+  total_price:number=0;
+  uItem=new Cart;
   showBox=false;
+  applied=false;
   constructor(private dataService: DataService, private cookie: CookieService, private loginService: LoginService) {}
 
+  applyCoupon(id:number){
 
+  }
   showUpdateItem(id:number){
-    var i=new Item;
+    var i=new Cart;
     this.uItems=this.items;
     var j;
     for(var k=0; k<this.uItems.length; k++){
@@ -54,8 +62,8 @@ export class ShowItemsComponent implements OnInit {
     // this.showBox=false;
   }
 
-  deleteItem(id:number){
-    this.dataService.deleteItem(id)
+  deleteCart(id:number){
+    this.dataService.deleteCart(parseInt(this.cookie.get('person_id')), id)
     .then(response =>{
       var y=JSON.parse(JSON.stringify(response));
       if(y.success==true){
@@ -67,15 +75,20 @@ export class ShowItemsComponent implements OnInit {
       }
     })
   }
-  getItems() {
-    return this.dataService.getItems().then( items => this.x = items)
+  getCheckout() {
+    return this.dataService.getCheckout(parseInt(this.cookie.get('person_id'))).then( items => this.x = items)
     .then(response => {
       var y=JSON.parse(JSON.stringify(response));
       if(y.itemsExists==true){
         this.items=y.data;
+        console.log(this.items);
+        this.total_price=0;
+        for(var k=0; k<this.items.length; k++){
+          this.total_price=this.total_price+this.items[k].price*this.items[k].quantity;
+        }
       }
       else if(y.itemsExists==false){
-        alert("No Items are available");
+        alert("No Items are available in checkout");
       }
       else{
         console.log("empty");
@@ -94,10 +107,29 @@ export class ShowItemsComponent implements OnInit {
       }
     })
   }
+  getCoupons(){
+    return this.dataService.getCouponsPerson(parseInt(this.cookie.get('person_id'))).then( coupons => this.x = coupons)
+    .then(response => {
+      var y=JSON.parse(JSON.stringify(response));
+      if(y.couponsExists==true){
+        this.coupons=y.data;
+      }
+      else if(y.couponsExists==false){
+        alert("No Coupons are available");
+      }
+      else{
+        console.log("empty");
+      }
+    })
+  }
+  couponApply(id:number){
+
+  }
 
   ngOnInit(): void {
     this.loginService.checkLoginFromDashboard();
-     this.getItems();
+     this.getCheckout();
+     this.getCoupons();
   }
 
 

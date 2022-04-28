@@ -1,25 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { Item } from '../item';
+import { Cart } from '../cart';
 import { CookieService } from 'ngx-cookie-service';
 import { LoginService } from '../login.service';
 
 @Component({
-  selector: 'app-show-items',
-  templateUrl: './show-items.component.html',
-  styleUrls: ['./show-items.component.css']
+  selector: 'app-cart',
+  templateUrl: './cart.component.html',
+  styleUrls: ['./cart.component.css']
 })
-export class ShowItemsComponent implements OnInit {
-  items: Item[]=[]
-  uItems: Item[]=[]
+export class CartComponent implements OnInit {
+  items: Cart[]=[]
+  uItems: Cart[]=[]
   x="";
-  uItem=new Item;
+  uItem=new Cart;
   showBox=false;
   constructor(private dataService: DataService, private cookie: CookieService, private loginService: LoginService) {}
 
 
   showUpdateItem(id:number){
-    var i=new Item;
+    var i=new Cart;
     this.uItems=this.items;
     var j;
     for(var k=0; k<this.uItems.length; k++){
@@ -54,8 +55,8 @@ export class ShowItemsComponent implements OnInit {
     // this.showBox=false;
   }
 
-  deleteItem(id:number){
-    this.dataService.deleteItem(id)
+  deleteCart(id:number){
+    this.dataService.deleteCart(parseInt(this.cookie.get('person_id')), id)
     .then(response =>{
       var y=JSON.parse(JSON.stringify(response));
       if(y.success==true){
@@ -67,8 +68,8 @@ export class ShowItemsComponent implements OnInit {
       }
     })
   }
-  getItems() {
-    return this.dataService.getItems().then( items => this.x = items)
+  getCart() {
+    return this.dataService.getCart(parseInt(this.cookie.get('person_id'))).then( items => this.x = items)
     .then(response => {
       var y=JSON.parse(JSON.stringify(response));
       if(y.itemsExists==true){
@@ -97,7 +98,7 @@ export class ShowItemsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginService.checkLoginFromDashboard();
-     this.getItems();
+     this.getCart();
   }
 
 

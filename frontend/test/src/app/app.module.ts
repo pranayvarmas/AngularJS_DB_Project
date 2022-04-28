@@ -23,6 +23,8 @@ import { AddIngredientsComponent } from './add-ingredients/add-ingredients.compo
 import { AddPersonsComponent } from './add-persons/add-persons.component';
 import { AddCouponsComponent } from './add-coupons/add-coupons.component';
 import { AddTablesComponent } from './add-tables/add-tables.component';
+import { CartComponent } from './cart/cart.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { AddTablesComponent } from './add-tables/add-tables.component';
     AddIngredientsComponent,
     AddPersonsComponent,
     AddCouponsComponent,
-    AddTablesComponent
+    AddTablesComponent,
+    CartComponent,
+    CheckoutComponent
   ],
   imports: [
     BrowserModule,
