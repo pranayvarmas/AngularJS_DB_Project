@@ -17,7 +17,10 @@ export class CheckoutComponent implements OnInit {
   coupons: CouponsUsers[]=[]
   uItems: Cart[]=[]
   x="";
+  payOption=true;
+  payStatus=false;
   total_price:number=0;
+  net_price:number=0;
   uItem=new Cart;
   showBox=false;
   applied=false;
@@ -86,6 +89,7 @@ export class CheckoutComponent implements OnInit {
         for(var k=0; k<this.items.length; k++){
           this.total_price=this.total_price+this.items[k].price*this.items[k].quantity;
         }
+        this.net_price=this.total_price;
       }
       else if(y.itemsExists==false){
         alert("No Items are available in checkout");
@@ -123,7 +127,19 @@ export class CheckoutComponent implements OnInit {
     })
   }
   couponApply(id:number){
-
+      this.applied=true;
+      this.net_price=this.total_price/2;
+  }
+  payment(){
+    this.payOption=false;
+  }
+  payment1(i:number){
+    if(i==1){
+      console.log("success");
+    }
+    else{
+      window.location.href='/cart';
+    }
   }
 
   ngOnInit(): void {
