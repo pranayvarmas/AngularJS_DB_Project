@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { Coupon } from './coupon';
 import { Ingredient } from './ingredient';
 import { Table } from './table';
+import { Booktable } from './book_table';
 import { identifierName } from '@angular/compiler';
 import { OnlineOrder } from './online_order';
 import { CookieService } from 'ngx-cookie-service';
@@ -118,10 +119,12 @@ export class DataService {
   }
   getFreeTables(dt:Date): Promise<string> {
     const url = `${this.customersUrl}booking-tables/${dt}`;
-    return this.http.get(url, {headers:this.headers})
+    
+    return this.http.get(url)
                .toPromise()
                .then(response => {
                   if(response!=undefined){
+                    
                     return response.json();
                   }
                   else{
@@ -130,9 +133,26 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
-  BookTable(id:number, person_id:string,currentdate:Date,booking_from:Date,booking_to:Date): Promise<string> {
-    const url = `${this.customersUrl}booking-tables/${id}/${person_id}/${currentdate}/${booking_from}/${booking_to}`;
-    return this.http.get(url, {headers:this.headers})
+  getBookedTables(id:number): Promise<string> {
+    const url = `${this.customersUrl}booked-tables/${id}`;
+    
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    
+                    return response.json();
+                  }
+                  else{
+                    console.log("FreeTables Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }      
+  BookTable(booktable:Booktable): Promise<string> {
+    const url = `${this.customersUrl}add-booking-tables`;
+    console.log(url);
+    return this.http.post(url, JSON.parse(JSON.stringify(booktable)))
                .toPromise()
                .then(response => {
                   if(response!=undefined){

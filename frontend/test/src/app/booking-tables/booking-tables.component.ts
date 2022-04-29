@@ -3,6 +3,7 @@ import { DataService } from '../data.service';
 import { Table } from '../table';
 import { CookieService } from 'ngx-cookie-service';
 import { DatePipe } from '@angular/common';
+import { Booktable } from '../book_table';
 
 @Component({
   selector: 'app-booking-tables',
@@ -13,11 +14,16 @@ import { DatePipe } from '@angular/common';
 export class BookingTablesComponent implements OnInit {
   tables: Table[]=[]
   uTables: Table[]=[]
+  mytables:Booktable[]=[]
   x="";
-  currentdate=new Date('2012-01-12');
-  booking_from = new Date;
-  booking_to = new Date;
-  
+  z="";
+  booktable = new Booktable;
+  currentdate=this.booktable.booking_date;
+  slot =0;
+   timestamp1 = this.currentdate.getDate();
+   timestamp2 = this.currentdate.getMonth();
+   timestamp3 = this.currentdate.getFullYear();
+  timestamp=this.currentdate.getHours().toString()+":"+ this.currentdate.getMinutes().toString()+":"+this.currentdate.getSeconds().toString()
  // let currentdate = new Date();
   uTable=new Table;
   upto="";
@@ -26,11 +32,14 @@ export class BookingTablesComponent implements OnInit {
   constructor(private dataService: DataService, private cookie: CookieService,private datePipe: DatePipe) {
     //this.mydate = this.datePipe.transform(this.mydate, 'yyyy-MM-dd');
     this.person_id=cookie.get('person_id');
+    this.booktable.person_id=Number(this.person_id);
+    console.log(this.timestamp);
   }
 
   showBookTable(id:number){
     var i=new Table;
     this.uTables=this.tables;
+    
     var j;
     for(var k=0; k<this.uTables.length; k++){
       if(this.uTables[k].table_id==id){
@@ -45,12 +54,13 @@ export class BookingTablesComponent implements OnInit {
       i=j;
       console.log(i);
       this.uTable = i;
+      this.booktable.table_id=this.uTable.table_id;
       this.showBox=true;
     }
   }
 
   BookTable(){
-    this.dataService.BookTable(this.uTable.table_id, this.person_id,this.currentdate,this.booking_from,this.booking_to)
+    this.dataService.BookTable(this.booktable)
     .then(response =>{
       var y=JSON.parse(JSON.stringify(response));
       if(y.success==true){
@@ -80,10 +90,25 @@ export class BookingTablesComponent implements OnInit {
       }
     })
   }
-  
+  getBookedTables(){
+    return this.dataService.getBookedTables(Number(this.person_id)).then( mytables => this.z = mytables)
+    .then(response => {
+      var y=JSON.parse(JSON.stringify(response));
+      if(y.tablesExists==true){
+        this.mytables=y.data;
+      }
+      else if(y.tablesExists==false){
+        alert("No Booked Tables are available");
+      }
+      else{
+        console.log("empty");
+      }
+    })
+  }
 
   ngOnInit(): void {
      this.getFreeTables();
+     this.getBookedTables();
   }
   
 

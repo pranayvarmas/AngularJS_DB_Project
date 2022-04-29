@@ -1,37 +1,46 @@
 <!-- //<p>show-tables works!</p> -->
 <div class="text-center">
-    <h3 style="color:black">Tables List:</h3>
+  <div class="text-center">BOOKED TABLES</div>
+  <table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Table_id</th>
+            <th>Booked_Date</th>
+            <th>Slot</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let table of mytables">
+            <td>{{table.table_id}}</td>
+            <td>{{table.booking_date | date}}</td>
+            <td>{{table.slot}}</td>
+            
+                            <!-- <button class="btn btn-primary" (click)="deleteItem(item.item_id)">Delete</button> -->
+          </tr>
+    </tbody>
+</table>  
+    <h3 style="color:black">Free Tables List:</h3>
     </div>
-    <p>{{currentdate }}</p>
+    
     <div class="container">
         <div [hidden]="!showBox">
             <form (ngSubmit)="BookTable()">    
                 
-              <div>Booking table : {{uTable.table_id}} on {{currentdate}}</div> 
+              <div>Booking table : {{booktable.table_id}} on {{booktable.booking_date}}          ===========    {{timestamp}}       === {{booktable.person_id}}</div> 
 
               <div class="form-group">
-                <label for="start_date">From:</label>
+                <label for="start_date">ON:</label>
                 <input type="date" class="form-control" id="start_date" required
-                [(ngModel)]="booking_from" name="start_date">
+                [(ngModel)]="booktable.booking_date" name="start_date">
               </div>
-      
+                <div>{{booktable.booking_date}}</div>   
               <div class="form-group">
-                <label for="end_date">To:</label>
-                <input type="date" class="form-control" id="end_date" required
-                [(ngModel)]="booking_to" name="end_date">
+                <label for="slot">Number::</label>
+                <input type="number" class="form-control" id="slot" required
+                [(ngModel)]="booktable.slot" name="slot">
               </div>     
-              <div class="form-group">
-                <label for="price">Price</label>
-                <input type="number" class="form-control" id="price" required
-                [(ngModel)]="uTable.price" name="price">
-              </div>
-      
-              <div class="form-group">
-                <label for="capacity">Capacity</label>
-                <input type="number" class="form-control" id="capacity" required
-                [(ngModel)]="uTable.capacity" name="capacity">
-              </div>
-      
+              <div>{{booktable.slot}}</div> 
+
               <div class="btn-group">
             <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
               <button type="submit" class="btn btn-success">Submit</button>

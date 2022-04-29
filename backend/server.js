@@ -1727,16 +1727,6 @@ app.get('/tables', function(req, res) {
     })
 })
 app.get('/booking-tables/:dt', function(req, res) {
-    var token=req.header('Authorization').replace('Bearer ', '');
-    let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    var verified=jwt.verify(token, jwtSecretKey);
-    if(verified){
-    }
-    else{
-        res.send({
-            success:false
-        })
-    }
     var x=req.params.dt;
     //dateString = 'Wed Mar 19 00:30:00 IST 1997';
     var date = new Date(x.replace('IST', ''));
@@ -1749,9 +1739,9 @@ app.get('/booking-tables/:dt', function(req, res) {
     let time3=date.getSeconds();
     let time = time1 + ":" + time2 + ":" + time3
     x=year+"-"+month+"-"+day;
-    console.log(time);
-    console.log(x);
-    q=mysql.format("select * from tables where table_id not in (select distinct table_id from book_tables where booking_date = ? and booking_from > ?) order by table_id;",[x,time]);
+    //console.log(time);
+    //console.log(x);
+    q=mysql.format("select * from tables where table_id not in (select distinct table_id from book_tables where booking_date = ? ) order by table_id;",[x]);
      console.log(q);
     
     client.query(q, (err1, res1) =>{
@@ -1771,7 +1761,7 @@ app.get('/booking-tables/:dt', function(req, res) {
                 })
             }
             else{
-                console.log(res1.rows);
+                //console.log(res1.rows);
                 res.send({
                     success:true,
                     tablesExists:true,
@@ -1779,6 +1769,69 @@ app.get('/booking-tables/:dt', function(req, res) {
                 })
             }
             // console.log(res1.rows);
+        }
+    })
+})
+app.get('/booked-tables/:id', function(req, res) {
+    var id=req.params.id;
+    //console.log(x);
+    q=mysql.format("select * from book_tables where person_id = ? order by booking_date,table_id;",[Number(id)]);
+     console.log(q);
+    
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    tablesExists:false,
+                    data:[]
+                })
+            }
+            else{
+                //console.log(res1.rows);
+                res.send({
+                    success:true,
+                    tablesExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+app.post('/add-booking-tables', function(req, res, next) {
+     //var inp=JSON.parse(Object.keys(req.body)[0]);
+    var inp = req.body;
+    /*var id=req.params.id;
+    var person_id=req.params.person_id;
+    var currentdate=new Date(req.params.currentdate);
+    var x = currentdate.getFullYear()+"-"+(currentdate.getMonth()+1)+"-"+currentdate.getDate();
+    /*var booking_from=req.params.booking_from;
+    var booking_to=req.params.booking_to;
+    var slot=req.params.slot;
+    console.log(x);*/
+    console.log(inp['booking_date']);
+    q=mysql.format("insert into book_tables(table_id,person_id,booking_date,slot) values (?, ?, ?, ?)", [inp['table_id'],inp['person_id'],inp['booking_date'],inp['slot']]);
+    console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false,
+                data:err1.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            })
         }
     })
 })
