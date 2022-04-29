@@ -1,0 +1,59 @@
+<!-- //<p>show-tables works!</p> -->
+<div class="text-center">
+    <h3 style="color:black">Tables List:</h3>
+    </div>
+    <div class="container">
+      <div [hidden]="!showBox">
+        <form (ngSubmit)="updateTable()">
+  
+          
+  
+          <div class="form-group">
+            <label for="table_type">table Type</label>
+            <input type="text" class="form-control" id="table_type" required
+            [(ngModel)]="uTable.table_type" name="table_type">
+          </div>
+  
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" class="form-control" id="price" required
+            [(ngModel)]="uTable.price" name="price">
+          </div>
+  
+          <div class="form-group">
+            <label for="capacity">Capacity</label>
+            <input type="number" class="form-control" id="capacity" required
+            [(ngModel)]="uTable.capacity" name="capacity">
+          </div>
+  
+          <div class="btn-group">
+        <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
+          <button type="submit" class="btn btn-success">Submit</button>
+        <!-- <button class="btn btn-danger" (click)="delete()">Delete</button> -->
+        </div>
+  
+        </form>
+      </div>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Capacity</th>
+                <th>Price</th>
+                <th>Table Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let table of tables">
+                <td>{{table.table_id}}</td>
+                <td>{{table.capacity}}</td>
+                <td>{{table.price}}</td>
+                <td>{{table.table_type}}</td>
+                <!-- <button class="btn btn-primary" (click)="itemToCart(item.item_id, 2)">Add to Cart</button> -->
+                <button class="btn btn-primary" (click)="showUpdateTable(table.table_id)">Edit</button>
+                <!-- <button class="btn btn-primary" (click)="deleteItem(item.item_id)">Delete</button> -->
+              </tr>
+        </tbody>
+    </table>
+    </div>

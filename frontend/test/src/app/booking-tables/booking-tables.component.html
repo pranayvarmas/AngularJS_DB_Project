@@ -1,0 +1,64 @@
+<!-- //<p>show-tables works!</p> -->
+<div class="text-center">
+    <h3 style="color:black">Tables List:</h3>
+    </div>
+    <p>{{currentdate }}</p>
+    <div class="container">
+        <div [hidden]="!showBox">
+            <form (ngSubmit)="BookTable()">    
+                
+              <div>Booking table : {{uTable.table_id}} on {{currentdate}}</div> 
+
+              <div class="form-group">
+                <label for="start_date">From:</label>
+                <input type="date" class="form-control" id="start_date" required
+                [(ngModel)]="booking_from" name="start_date">
+              </div>
+      
+              <div class="form-group">
+                <label for="end_date">To:</label>
+                <input type="date" class="form-control" id="end_date" required
+                [(ngModel)]="booking_to" name="end_date">
+              </div>     
+              <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" class="form-control" id="price" required
+                [(ngModel)]="uTable.price" name="price">
+              </div>
+      
+              <div class="form-group">
+                <label for="capacity">Capacity</label>
+                <input type="number" class="form-control" id="capacity" required
+                [(ngModel)]="uTable.capacity" name="capacity">
+              </div>
+      
+              <div class="btn-group">
+            <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
+              <button type="submit" class="btn btn-success">Submit</button>
+            <!-- <button class="btn btn-danger" (click)="delete()">Delete</button> -->
+            </div>
+      
+            </form>
+          </div>        
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Capacity</th>
+                <th>Price</th>
+                <th>Table Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let table of tables">
+                <td>{{table.table_id}}</td>
+                <td>{{table.capacity}}</td>
+                <td>{{table.price}}</td>
+                <td>{{table.table_type}}</td>
+                <button class="btn btn-primary" (click)="showBookTable(table.table_id)">Book</button>
+                                <!-- <button class="btn btn-primary" (click)="deleteItem(item.item_id)">Delete</button> -->
+              </tr>
+        </tbody>
+    </table>
+    </div>

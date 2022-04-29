@@ -40,6 +40,92 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
+////////////////////////////////////////////////////////////////  
+  getIngredients(): Promise<string> {
+    const url = `${this.customersUrl}ingredients`;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Ingredients Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }  
+  getCoupons(): Promise<string> {
+    const url = `${this.customersUrl}coupons`;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Coupons Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }    
+  getPerson(): Promise<string> {
+    const url = `${this.customersUrl}persons`;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Coupons Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+  getTables(): Promise<string> {
+    const url = `${this.customersUrl}tables`;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Tables Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+  getFreeTables(dt:Date): Promise<string> {
+    const url = `${this.customersUrl}booking-tables/${dt}`;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("FreeTables Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }   
+  BookTable(id:number, person_id:string,currentdate:Date,booking_from:Date,booking_to:Date): Promise<string> {
+    const url = `${this.customersUrl}booking-tables/${id}/${person_id}/${currentdate}/${booking_from}/${booking_to}`;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("booking Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+////////////////////////////////////////////////////////////////////   
   getOrders(id:number): Promise<string> {
     const url = `${this.customersUrl}orders/${id}`;
     return this.http.get(url)
@@ -250,6 +336,64 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
+//////////////////////////////////////////
+  updateIngredient(id:number, item:Ingredient): Promise<string> {
+    const url = `${this.customersUrl}update_ingredient/${id}`;
+    return this.http.put(url, JSON.parse(JSON.stringify(item)))
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("updateItem Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }  
+  updateCoupon(id:number, item:Coupon): Promise<string> {
+    const url = `${this.customersUrl}update_coupon/${id}`;
+    return this.http.put(url, JSON.parse(JSON.stringify(item)))
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("updateCoupon Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }    
+  updatePerson(id:number, item:Person): Promise<string> {
+    const url = `${this.customersUrl}update_person/${id}`;
+    return this.http.put(url, JSON.parse(JSON.stringify(item)))
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("updatePerson Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+  updateTable(id:number, table:Table): Promise<string> {
+    const url = `${this.customersUrl}update_table/${id}`;
+    return this.http.put(url, JSON.parse(JSON.stringify(table)))
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("updateTable Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+//////////////////////////////////////////  
   deleteItem(id:number): Promise<string> {
     const url = `${this.customersUrl}delete_item/${id}`;
     return this.http.delete(url)

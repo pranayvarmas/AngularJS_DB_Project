@@ -1,0 +1,70 @@
+<div class="text-center">
+    <h3 style="color:black">Coupons List:</h3>
+    </div>
+    <div class="container">
+        <div [hidden]="!showBox">
+            <form (ngSubmit)="updateCoupon()">
+      
+              <div class="form-group">
+                <label for="coupon_txt">Coupon Text</label>
+                <input type="text" class="form-control" id="coupon_txt" required
+                [(ngModel)]="uItem.coupon_txt" name="coupon_txt">
+              </div>
+      
+              <div class="form-group">
+                <label for="coupon_type">Item Type</label>
+                <input type="text" class="form-control" id="coupon_type" required
+                [(ngModel)]="uItem.coupon_type" name="coupon_type">
+              </div>
+
+              <div class="form-group">
+                <label for="availability">Availability</label>
+                <input type="number" class="form-control" id="availability" required
+                [(ngModel)]="uItem.availability" name="availability">
+              </div>      
+              <div class="form-group">
+                <label for="start_date">Price</label>
+                <input type="date" class="form-control" id="start_date" required
+                [(ngModel)]="uItem.start_date" name="start_date">
+              </div>
+      
+              <div class="form-group">
+                <label for="end_date">Price</label>
+                <input type="date" class="form-control" id="end_date" required
+                [(ngModel)]="uItem.end_date" name="end_date">
+              </div>
+      
+              <div class="btn-group">
+            <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
+              <button type="submit" class="btn btn-success">Submit</button>
+            <!-- <button class="btn btn-danger" (click)="delete()">Delete</button> -->
+            </div>
+      
+            </form>
+          </div>        
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Availability</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of items">
+                <td>{{item.coupon_id}}</td>
+                <td>{{item.coupon_txt}}</td>
+                <td>{{item.coupon_type}}</td>
+                <td>{{item.availability}}</td>
+                <td>{{item.start_date}}</td>
+                <td>{{item.end_date}}</td>\
+                <button class="btn btn-primary" (click)="showUpdateCoupon(item.coupon_id)">Edit</button> 
+              </tr>
+        </tbody>
+    </table>
+    </div>
+  

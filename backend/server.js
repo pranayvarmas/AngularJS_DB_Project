@@ -1104,6 +1104,257 @@ app.get('/purchases', function (req, res) {
 //     })
 // })
 //////////////////////////////////////////////////////////////////////////
+app.get('/ingredients', function(req, res) {
+    q=mysql.format("select * from ingredients order by ing_id;");
+    // console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    itemsExists:false,
+                    data:[]
+                })
+            }
+            else{
+                res.send({
+                    success:true,
+                    itemsExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+app.get('/coupons', function(req, res) {
+    q=mysql.format("select * from coupons order by coupon_id;");
+    // console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    itemsExists:false,
+                    data:[]
+                })
+            }
+            else{
+                res.send({
+                    success:true,
+                    itemsExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+app.get('/persons', function(req, res) {
+    q=mysql.format("select * from persons order by person_id;");
+    // console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    itemsExists:false,
+                    data:[]
+                })
+            }
+            else{
+                res.send({
+                    success:true,
+                    itemsExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+app.get('/tables', function(req, res) {
+    q=mysql.format("select * from tables order by table_id;");
+    // console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    tablesExists:false,
+                    data:[]
+                })
+            }
+            else{
+                res.send({
+                    success:true,
+                    tablesExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+app.get('/booking-tables/:dt', function(req, res) {
+    var x=req.params.dt;
+    //dateString = 'Wed Mar 19 00:30:00 IST 1997';
+    var date = new Date(x.replace('IST', ''));
+    console.log(date);
+    let day = date.getDate();
+    let month = date.getMonth()+1;
+    let year = date.getFullYear();
+    let time1=date.getHours();
+    let time2=date.getMinutes();
+    let time3=date.getSeconds();
+    let time = time1 + ":" + time2 + ":" + time3
+    x=year+"-"+month+"-"+day;
+    console.log(time);
+    console.log(x);
+    q=mysql.format("select * from tables where table_id not in (select distinct table_id from book_tables where booking_date = ? and booking_from > ?) order by table_id;",[x,time]);
+     console.log(q);
+    
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    tablesExists:false,
+                    data:[]
+                })
+            }
+            else{
+                console.log(res1.rows);
+                res.send({
+                    success:true,
+                    tablesExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+app.put('/update_ingredient/:id', function(req, res, next) {
+    // var inp=JSON.parse(Object.keys(req.body)[0]);
+    var id=req.params.id;
+    var inp = req.body;
+    q=mysql.format("update ingredients set ing_name = ?,  availability = ?, price = ? where ing_id = ?;", [inp['ing_name'], inp['availability'], inp['price'], id]);
+    console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false,
+                data:err1.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            })
+        }
+    })
+})
+app.put('/update_coupon/:id', function(req, res, next) {
+    // var inp=JSON.parse(Object.keys(req.body)[0]);
+    var id=req.params.id;
+    var inp = req.body;
+    q=mysql.format("update coupons set coupon_txt = ?, coupon_type = ? , availability = ?, start_date = ? , end_date=? where coupon_id = ?;", [inp['coupon_txt'],inp['coupon_type'], inp['availability'], inp['start_date'],inp['end_date'], id]);
+    console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false,
+                data:err1.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            })
+        }
+    })
+})
+app.put('/update_person/:id', function(req, res, next) {
+    // var inp=JSON.parse(Object.keys(req.body)[0]);
+    var id=req.params.id;
+    var inp = req.body;
+    q=mysql.format("update persons set person_name = ?, person_type = ? , type_from = ?, type_to = ? , address=? , phone_no = ? ,salary = ? ,email = ? ,password = ?  where person_id = ?;", [inp['person_name'],inp['person_type'], inp['type_from'], inp['type_to'],inp['address'] , inp['phone_no'],inp['salary'],inp['email'],inp['password'],id]);
+    console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false,
+                data:err1.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            })
+        }
+    })
+})
+app.put('/update_table/:id', function(req, res, next) {
+    // var inp=JSON.parse(Object.keys(req.body)[0]);
+    var id=req.params.id;
+    var inp = req.body;
+    q=mysql.format("update tables set table_type = ?, capacity = ?, price = ? where table_id = ?;", [inp['table_type'], inp['capacity'], inp['price'], id]);
+    console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false,
+                data:err1.stack
+            })
+        }
+        else{
+            res.send({
+                success:true
+            })
+        }
+    })
+})
+/////////////////////////////
 var server = app.listen(3030, function () {
    var host = server.address().address
    var port = server.address().port
