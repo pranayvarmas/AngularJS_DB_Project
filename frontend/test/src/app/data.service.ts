@@ -15,6 +15,7 @@ import { Coupon } from './coupon';
 import { Ingredient } from './ingredient';
 import { Table } from './table';
 import { identifierName } from '@angular/compiler';
+import { OnlineOrder } from './online_order';
 
 @Injectable()
 export class DataService {
@@ -39,6 +40,48 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
+  getOrders(id:number): Promise<string> {
+    const url = `${this.customersUrl}orders/${id}`;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Orders Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+  getOrderDetails(id:number): Promise<string> {
+    const url = `${this.customersUrl}orders/details/${id}`;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Orders Details Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+  cancelOrder(id:number){
+    const url = `${this.customersUrl}cancel_order`;
+    return this.http.post(url, {on_order_id: id})
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("CancelOrder Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
   getCouponsPerson(id:number): Promise<string> {
     const url = `${this.customersUrl}coupons_person/${id}`;
     return this.http.get(url)
@@ -54,6 +97,20 @@ export class DataService {
                .catch(this.handleError);
   }
 
+  getEstTime(id:number): Promise<string> {
+    const url = `${this.customersUrl}get_est_time/${id}`;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Est Time Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
   getCart(id:number): Promise<string> {
     const url = `${this.customersUrl}cart/${id}`;
     console.log(id);
@@ -149,6 +206,21 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
+  addOnlineOrder(oo:OnlineOrder): Promise<string> {
+    const url = `${this.customersUrl}add_onlineorder`;
+    return this.http.post(url, JSON.parse(JSON.stringify(oo)))
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("addOnlineOrder Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+
 
   addItem(item:Item): Promise<string> {
     const url = `${this.customersUrl}add_item`;

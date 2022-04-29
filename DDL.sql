@@ -25,7 +25,7 @@ CREATE TABLE items (
   price INT,
   PRIMARY KEY(item_id)
 );
-CREATE SEQUENCE items_seq START WITH 7000 INCREMENT BY 1;
+CREATE SEQUENCE items_seq START WITH 10 INCREMENT BY 1;
 alter table items alter item_id set default nextval('items_seq');
 
 
@@ -37,7 +37,7 @@ CREATE TABLE ingredients(
   price INT,
   PRIMARY KEY(ing_id) 
 );  
-CREATE SEQUENCE ings_seq START WITH 7000 INCREMENT BY 1;
+CREATE SEQUENCE ings_seq START WITH 10 INCREMENT BY 1;
 alter table ingredients alter ing_id set default nextval('ings_seq');
 
 
@@ -48,7 +48,7 @@ CREATE TABLE persons (
  person_type TEXT,
  type_from DATE,
  type_to DATE,
- address TEXT,
+ address INT,
  phone_no TEXT,
  salary INT,
  email TEXT,
@@ -56,8 +56,16 @@ CREATE TABLE persons (
  PRIMARY KEY(person_id)
 );
 
-CREATE SEQUENCE persons_seq START WITH 7000 INCREMENT BY 1;
+CREATE SEQUENCE persons_seq START WITH 10 INCREMENT BY 1;
 alter table persons alter person_id set default nextval('persons_seq');
+
+
+CREATE TABLE spatial (
+    id serial NOT NULL,
+    name varchar(255) NOT NULL,
+    location Point NOT NULL,
+    PRIMARY KEY (id)
+);
 
 
 ----------Purchases information-----------------
@@ -78,7 +86,7 @@ CREATE TABLE tables(
  price INT,
  PRIMARY KEY(table_id)
 );
-CREATE SEQUENCE tables_seq START WITH 7000 INCREMENT BY 1;
+CREATE SEQUENCE tables_seq START WITH 10 INCREMENT BY 1;
 alter table tables alter table_id set default nextval('tables_seq');
 
 
@@ -90,6 +98,7 @@ CREATE TABLE delivery_persons(
  primary_no INT,
  secondary_no INT,
  phone_no TEXT,
+ availability INT,
  salary INT,
  PRIMARY KEY(dp_id)
 );
@@ -140,7 +149,7 @@ CREATE TABLE online_orders(
   order_price  INT,
   order_date  DATE,
   order_time  TIME,
-  delivery_address  TEXT,
+  delivery_address  INT,
   is_delivered   BOOL,
   is_cancelled  BOOL,
   estimated_time  TIME,
@@ -163,7 +172,7 @@ CREATE TABLE coupons(
  PRIMARY KEY(coupon_id)
 );
 
-CREATE SEQUENCE coupons_seq START WITH 7000 INCREMENT BY 1;
+CREATE SEQUENCE coupons_seq START WITH 10 INCREMENT BY 1;
 alter table coupons alter coupon_id set default nextval('coupons_seq');
 
 
@@ -202,6 +211,7 @@ CREATE TABLE cart(
   FOREIGN KEY(person_id) references persons on delete set null,
   FOREIGN KEY(item_id) references items on delete set null
 );
+
 ---------------Purchased ingredients-----------------------
 CREATE TABLE pur_ing(
  purchase_id INT,
@@ -322,8 +332,7 @@ CREATE TABLE book_tables(
   table_id INT,
   person_id INT,
   booking_date DATE,
-  booking_from TIME,
-  booking_to TIME,
+  slot INT,
   PRIMARY KEY(booking_id),
   FOREIGN KEY(table_id) references tables on delete set null,
   FOREIGN KEY(person_id) references persons on delete set null

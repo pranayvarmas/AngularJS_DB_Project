@@ -3,7 +3,7 @@
   <h3 style="color:black">Checkout:</h3>
   </div>
   <div class="container">
-
+    <div [hidden]="oo_success">
   <table class="table table-hover table-striped">
       <thead>
           <tr>
@@ -76,5 +76,14 @@
   <button [hidden]="!payOption" class="btn btn-primary" (click)="payment()">Pay {{this.net_price}}</button>
   <button [hidden]="payOption" class="btn btn-primary" (click)="payment1(1)">Success</button>
   <button [hidden]="payOption" class="btn btn-primary" (click)="payment1(0)">Fail</button>
-
+</div>
+  <div [hidden]="!oo_success">
+    <p>Order placed successfully</p>
+    <!-- <p>Distance to deliver: {{this.est_time}}</p> -->
+    <p>Estimated time to deliver: {{this.est_time}} minutes</p>
+    <p>Delivery Agent Details:</p>
+    <p>Name: {{this.dp_id['dp_name']}}</p>
+    <p>Contact: {{this.dp_id['phone_no']}}</p>
+    <p>Rating: {{this.dp_id['rating']}}</p>
+  </div>
   </div>

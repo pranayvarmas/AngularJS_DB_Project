@@ -1,0 +1,47 @@
+<div class="text-center">
+  <h3 style="color:black">Orders List:</h3>
+  </div>
+  <div class="container">
+    <div [hidden]="!showBox">
+      <p>Order ID: {{this.order1.on_order_id}}</p>
+      <p>Price: {{this.order1.order_price}}</p>
+      <p>Quantity: {{this.order1.quantity}}</p>
+      <p>Order Date: {{this.order1.order_date}}</p>
+      <!-- <p>Order Time: {{this.order1.order_time}}</p> -->
+      <p>Delivery Address: {{this.order1.on_order_id}}</p>
+      <p>Delivery Status: {{this.order1.is_delivered}}</p>
+      <p>Cancellation: {{this.order1.is_cancelled}}</p>
+      <p>Estimated Time from order time: {{this.order1.estimated_time}}</p>
+      <p>Delivery Person Details:</p>
+      <p>Cancellation: {{this.order1.is_cancelled}}</p>
+      <button class="btn btn-primary" (click)="cancelOrder(this.order1.on_order_id)">Cancel</button>
+
+    </div>
+  <table class="table table-hover table-striped">
+      <thead>
+          <tr>
+              <th>ID</th>
+              <th>Price</th>
+              <th>Order Quantity</th>
+              <th>Estimated Time</th>
+              <!-- <th></th> -->
+              <th></th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let order of orders">
+              <td>{{order.on_order_id}}</td>
+              <td>{{order.order_price}}</td>
+              <td>{{order.quantity}}</td>
+              <td>{{order.order_date}}</td>
+              <!-- <td>{{order.order_time}}</td> -->
+              <button class="btn btn-primary" (click)="openOrder(order.on_order_id)">Open</button>
+              <!-- <button class="btn btn-primary" (click)="showUpdateItem(item.item_id)">Edit</button> -->
+              <!-- <button class="btn btn-primary" (click)="deleteItem(item.item_id)">Delete</button> -->
+            </tr>
+      </tbody>
+  </table>
+  <a routerLink="/cart" class="btn btn-primary active" role="button" routerLinkActive="active">Cart</a>
+<br/>
+
+  </div>

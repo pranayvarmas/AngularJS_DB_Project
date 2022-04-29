@@ -107,6 +107,161 @@ app.get('/items', function(req, res) {
     })
 })
 
+app.get('/orders/:id', function(req, res) {
+    var id=req.params.id;
+    q=mysql.format("select * from online_orders, online_items where person_id=? and online_orders.on_order_id=online_items.on_order_id order by online_orders.on_order_id;", id);
+    // console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    ordersExists:false,
+                    data:[]
+                })
+            }
+            else{
+                res.send({
+                    success:true,
+                    ordersExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+app.post('/cancel_order', function(req, res, next){
+    var id=req.body['on_order_id'];
+    q=mysql.format("update online_orders set is_cancelled=true where on_order_id=?", id);
+    var date=new Date().toLocaleDateString();
+    var time=new Date().toLocaleTimeString();
+    q1=mysql.format("insert into cancellations(on_order_id, c_reason, date, time) values(?, ?, ?, ?);", [id, "Cancelled", date, time]);
+    q2=mysql.format("select dp_id from online_orders where on_order_id=?", id);
+    client.query("begin")
+    .then((res1) => {
+        // console.log("q");
+        return client.query(q)
+    })
+    .then((res2) =>{
+        // console.log("q1");
+        return client.query(q1)
+    })
+    .then((res3) =>{
+        // console.log("q2");
+        return client.query(q2);
+    })
+    .then((res4) =>{
+        // console.log("q3");
+        q3=mysql.format("update delivery_persons set availability=True where dp_id=?", res4.rows[0]['dp_id']);
+        return client.query(q3);
+    })
+    .then((res5) =>{
+        // console.log("q4");
+        res.send({
+            success:true
+        })
+        return client.query("commit");
+    })
+    .catch((err) =>{
+        console.log(err);
+        return client.query("rollback");
+    })
+    .catch((err) =>{
+        console.log("error rolling back");
+    })
+})
+app.get('/orders/details/:id', function(req, res) {
+    var id=req.params.id;
+    q=mysql.format("select * from online_orders where on_order_id=?;", parseInt(id));
+    console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    orderExists:false,
+                    data:[]
+                })
+            }
+            else{
+                q1=mysql.format("select * from online_items where on_order_id=?", parseInt(id));
+                console.log(q1);
+                client.query(q1, (err2, res2) =>{
+                    if(err2){
+                        console.error(err2.stack);
+                        res.send({
+                            success:false
+                        })
+                    }
+                    else{
+                        // console.log("Not Error");
+                        if(res2.rows.length==0){
+                            res.send({
+                                success:false,
+                                data:[]
+                            })
+                        }
+                        else{
+                            res.send({
+                                success:true,
+                                orderExists:true,
+                                data:res1.rows,
+                                data1:res2.rows
+                            })
+                        }
+                    }
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+    // var id=req.params.id;
+    // q=mysql.format("select * from online_orders where on_order_id=?;", parseInt(id));
+    
+    // client.query("begin")
+    // .then((res1) => {
+    //     return client.query(q)
+    // })
+    // .then((res2) =>{
+    //     return client.query(q1)
+    // })
+    // .then((res3) =>{
+    //     return client.query(q2);
+    // })
+    // .then((res4) =>{
+    //     q3=mysql.format("update delivery_persons set availability=True where dp_id=?", res4.rows[0]['dp_id']);
+    //     return client.query(q3);
+    // })
+    // .then((res5) =>{
+    //     res.send({
+    //         success:true
+    //     })
+    //     return client.query("commit");
+    // })
+    // .catch((err) =>{
+    //     console.log(err);
+    //     return client.query("rollback");
+    // })
+    // .catch((err) =>{
+    //     console.log("error rolling back");
+    // })
+})
+
 app.get('/ingredients', function(req, res) {
     q=mysql.format("select * from ingredients order by ing_id;");
     // console.log(q);
@@ -203,6 +358,147 @@ app.get('/coupons_person/:id', function(req, res) {
     })
 })
 
+app.get('/get_est_time/:id', function(req, res) {
+    var id=req.params.id;
+    console.log(id);
+    q=mysql.format("SELECT ST_DistanceSpheroid(geometry(a.location), geometry(b.location), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') FROM spatial a, spatial b WHERE a.id=? AND b.id=?;", [1, parseInt(id)]);
+    console.log(q);
+    dp_id=0;
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    adrExists:false,
+                    data:0
+                })
+            }
+            else{
+                console.log(res1.rows);
+                q1=mysql.format("select * from delivery_persons where availability=True and primary_no=?", parseInt(id));
+                console.log(q1);
+                client.query(q1, (err2, res2) =>{
+                    if(err2){
+                        console.error(err2.stack);
+                        res.send({
+                            success:false
+                        })
+                    }
+                    else{
+                        // console.log("Not Error");
+                        if(res2.rows.length!=0){
+                            dp_id=res2.rows[0];
+                            q11=mysql.format("update delivery_persons set availability=False where dp_id=?", dp_id['dp_id']);
+                            client.query(q11, (err11, res11) =>{
+                                if(err11){
+                                    console.log(err11.stack);
+                                }
+                                else{
+                                    res.send({
+                                        success:true,
+                                        adrExists:true,
+                                        dpExists:true,
+                                        data:res1.rows[0]['st_distancespheroid']/1000,
+                                        dp_id: dp_id
+                                    })
+                                }
+                            })
+                            
+                        }
+                        else{
+                            q2=mysql.format("select * from delivery_persons where availability=True and secondary_no=?", parseInt(id));
+                            console.log(q2);
+                            client.query(q2, (err3, res3) =>{
+                                if(err3){
+                                    console.error(err3.stack);
+                                    res.send({
+                                        success:false
+                                    })
+                                }
+                                else{
+                                    // console.log("Not Error");
+                                    if(res3.rows.length!=0){
+                                        dp_id=res3.rows[0];
+                                        q11=mysql.format("update delivery_persons set availability=False where dp_id=?", dp_id['dp_id']);
+                                        client.query(q11, (err11, res11) =>{
+                                            if(err11){
+                                                console.log(err11.stack);
+                                            }
+                                            else{
+                                                res.send({
+                                                    success:true,
+                                                    adrExists:true,
+                                                    dpExists:true,
+                                                    data:res1.rows[0]['st_distancespheroid']/1000,
+                                                    dp_id: dp_id
+                                                })
+                                            }
+                                        })
+                            
+                                    }
+                                    else{
+                                        q3=mysql.format("select * from delivery_persons where availability=True");
+                                        console.log(q3);
+                                        client.query(q3, (err4, res4) =>{
+                                            if(err4){
+                                                console.error(err4.stack);
+                                                res.send({
+                                                    success:false
+                                                })
+                                            }
+                                            else{
+                                                // console.log("Not Error");
+                                                if(res4.rows.length!=0){
+                                                    dp_id=res4.rows[0];
+                                                    q11=mysql.format("update delivery_persons set availability=False where dp_id=?", dp_id['dp_id']);
+                                                    console.log(q11);
+                                                    client.query(q11, (err11, res11) =>{
+                                                        if(err11){
+                                                            console.log(err11.stack);
+                                                        }
+                                                        else{
+                                                            res.send({
+                                                                success:true,
+                                                                adrExists:true,
+                                                                dpExists:true,
+                                                                data:res1.rows[0]['st_distancespheroid']/1000,
+                                                                dp_id: dp_id
+                                                            })
+                                                        }
+                                                    })
+                            
+                                                }
+                                                else{
+                                                    res.send({
+                                                        success: true,
+                                                        dpExists:false
+                                                    })
+                                                }
+                                                // console.log(res1.rows);
+                                            }
+                                        })
+                                    }
+                                    // console.log(res1.rows);
+                                }
+                            })
+                        }
+                        // console.log(res1.rows);
+                    }
+                })
+                
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+
 app.get('/checkout/:id', function(req, res) {
     var id=req.params.id;
     console.log(id);
@@ -260,7 +556,62 @@ app.get('/checkout/:id', function(req, res) {
 app.post('/item_to_cart', function(req, res, next) {
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var inp = req.body;
-    q=mysql.format("insert into cart(person_id, item_id, quantity) values (?, ?, ?)", [inp['person_id'], inp['item_id'], inp['quantity']]);
+    q0=mysql.format("select * from cart where person_id = ? and item_id = ?", [inp['person_id'], inp['item_id']])
+    console.log(q0);
+    client.query(q0, (err0, res0) =>{
+        if(err0){
+            console.log(err0.stack);
+            res.send({
+                success:false,
+                data:err0.stack
+            })
+        }
+        else{
+            if(res0.rows.length==0){
+                q=mysql.format("insert into cart(person_id, item_id, quantity) values (?, ?, ?)", [inp['person_id'], inp['item_id'], inp['quantity']]);
+                console.log(q);
+                client.query(q, (err1, res1) =>{
+                    if(err1){
+                        console.error(err1.stack);
+                        res.send({
+                            success:false,
+                            data:err1.stack
+                        })
+                    }
+                    else{
+                        res.send({
+                            success:true
+                        })
+                    }
+                })
+            }
+            else{
+                q=mysql.format("update cart set quantity=? where person_id=? and item_id=?", [inp['quantity']+res0.rows[0]['quantity'], inp['person_id'], inp['item_id']]);
+                console.log(q);
+                client.query(q, (err1, res1) =>{
+                    if(err1){
+                        console.error(err1.stack);
+                        res.send({
+                            success:false,
+                            data:err1.stack
+                        })
+                    }
+                    else{
+                        res.send({
+                            success:true
+                        })
+                    }
+                })
+            }
+        }
+    })
+    
+})
+
+app.post('/add_onlineorder', function(req, res, next) {
+    // var inp=JSON.parse(Object.keys(req.body)[0]);
+    var inp = req.body;
+    q=mysql.format("select * from cart where person_id=?", inp["person_id"]);
     console.log(q);
     client.query(q, (err1, res1) =>{
         if(err1){
@@ -271,12 +622,87 @@ app.post('/item_to_cart', function(req, res, next) {
             })
         }
         else{
-            res.send({
-                success:true
-            })
+            if(res1.rows.length==0){
+                res.send({
+                    success:false
+                })
+            }
+            else{
+                
+                q1="insert into online_items(on_order_id, item_id, quantity) values("
+                q2="";
+                var tot_q=0;
+                for(var k=0; k<res1.rows.length; k++){
+                    tot_q=tot_q+res1.rows[k]['quantity'];
+                }
+                var on_order_id=0;
+                var date=new Date().toLocaleDateString();
+                var time=new Date().toLocaleTimeString();
+                console.log(date, time, inp['delivery_address']);
+                q3=mysql.format("insert into online_orders(quantity, person_id, order_price, order_date, order_time, delivery_address, is_delivered, is_cancelled, estimated_time, dp_id) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", [tot_q, inp['person_id'], inp['order_price'], date, time, inp['delivery_address'], false, false, parseInt(inp['estimated_time']), inp['dp_id']]);
+                console.log(q3);
+                client.query(q3, (err4, res4) =>{
+                    if(err4){
+                        console.error(err4.stack);
+                        res.send({
+                            success:false,
+                            data:err4.stack
+                        })
+                    }
+                    else{
+                        q4=mysql.format("select max(on_order_id) from online_orders;");
+                        client.query(q4, (err5, res5) =>{
+                            if(err5){
+                                console.log(err5.stack);
+                                res.send({
+                                    success:false,
+                                    data:err5.stack
+                                })
+                            }
+                            else{
+                                on_order_id=res5.rows[0]['max'];
+                                console.log(res5.rows[0]['max']);
+                                for(var k=0; k<res1.rows.length; k++){
+                                    q2=q2+q1+on_order_id.toString()+","+res1.rows[k]['item_id']+","+res1.rows[k]['quantity']+");";
+                                }
+                                console.log(q2);
+                                client.query(q2, (err3, res3) =>{
+                                    if(err3){
+                                        console.error(err3.stack);
+                                        res.send({
+                                            success:false,
+                                            data:err3.stack
+                                        })
+                                    }
+                                    else{
+                                        q5=mysql.format("delete from cart where person_id=?;", inp['person_id']);
+                                        console.log(q5);
+                                        client.query(q5, (err6, res6) =>{
+                                            if(err6){
+                                                console.log(err6);
+                                                res.send({
+                                                    success:false,
+                                                    data:err6.stack
+                                                })
+                                            }
+                                            else{
+                                                res.send({
+                                                    success:true
+                                                })
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                        
+                    }
+                })
+            }
         }
     })
 })
+
 app.post('/add_coupon', function(req, res, next) {
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var inp = req.body;

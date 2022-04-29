@@ -25,6 +25,7 @@ import { AddCouponsComponent } from './add-coupons/add-coupons.component';
 import { AddTablesComponent } from './add-tables/add-tables.component';
 import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './checkout/checkout.component';
+import { ShowOrdersComponent } from './show-orders/show-orders.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { CheckoutComponent } from './checkout/checkout.component';
     AddCouponsComponent,
     AddTablesComponent,
     CartComponent,
-    CheckoutComponent
+    CheckoutComponent,
+    ShowOrdersComponent
   ],
   imports: [
     BrowserModule,
