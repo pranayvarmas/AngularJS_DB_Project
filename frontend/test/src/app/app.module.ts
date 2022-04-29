@@ -30,6 +30,7 @@ import { DpDetailsComponent } from './dp-details/dp-details.component';
 import { ItemDetailsComponent } from './item-details/item-details.component';
 import { DpFeedbackComponent } from './dp-feedback/dp-feedback.component';
 import { ItemFeedbackComponent } from './item-feedback/item-feedback.component';
+import { ItemAnalyticsComponent } from './item-analytics/item-analytics.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ItemFeedbackComponent } from './item-feedback/item-feedback.component';
     DpDetailsComponent,
     ItemDetailsComponent,
     DpFeedbackComponent,
-    ItemFeedbackComponent
+    ItemFeedbackComponent,
+    ItemAnalyticsComponent
   ],
   imports: [
     BrowserModule,

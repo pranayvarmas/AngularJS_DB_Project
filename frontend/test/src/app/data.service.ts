@@ -47,6 +47,21 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
+  getItemAnalytics(): Promise<string> {
+    console.log(this.headers);
+    const url = `${this.customersUrl}itemanalytics`;
+    return this.http.get(url, {headers:this.headers})
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("ItemAnalytics Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
   getIngredients(): Promise<string> {
     const url = `${this.customersUrl}ingredients`;
     return this.http.get(url, {headers:this.headers})
