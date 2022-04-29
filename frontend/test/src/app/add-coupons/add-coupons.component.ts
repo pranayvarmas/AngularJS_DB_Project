@@ -35,6 +35,14 @@ export class AddCouponsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    var type=this.cookie.get('person_type');
+    if(type=="Billing Manager" || type=="General Manager"){
+
+    }
+    else{
+      alert("Invalid Page");
+      window.location.replace("/dashboard");
+    }
   }
 
 }

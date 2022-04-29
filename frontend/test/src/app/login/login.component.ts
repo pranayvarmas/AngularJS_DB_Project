@@ -44,6 +44,7 @@ export class LoginComponent implements OnInit {
           this.cookie.set( 'phone_no', y.data[0]['phone_no'].toString(), date);
           this.cookie.set( 'salary', y.data[0]['salary'].toString(), date);
           this.cookie.set( 'email', y.data[0]['email'].toString(), date);
+          this.cookie.set( 'token', y.token, date);
           window.location.href="/dashboard";
        }
      })

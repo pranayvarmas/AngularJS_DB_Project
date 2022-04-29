@@ -16,21 +16,25 @@ import { Ingredient } from './ingredient';
 import { Table } from './table';
 import { identifierName } from '@angular/compiler';
 import { OnlineOrder } from './online_order';
+import { CookieService } from 'ngx-cookie-service';
 import { DpFeedback } from './dp_feedback';
 import { ItemFeedback } from './item_feedback';
 
 @Injectable()
 export class DataService {
 
-  private customersUrl = 'http://localhost:3030/';  // URL to web API
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});
+  constructor(private http: Http, private cookie: CookieService) { }
 
-  constructor(private http: Http) { }
+  private customersUrl = 'http://localhost:3030/';  // URL to web API
+  // console.log(this.cookie.get('token').toString());
+  private headers = new Headers({'Content-Type': 'application/json', 'Authorization':'Bearer '+this.cookie.get('token')});
+
 
   // Get all customers
   getItems(): Promise<string> {
+    console.log(this.headers);
     const url = `${this.customersUrl}items`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -44,7 +48,7 @@ export class DataService {
   }
   getIngredients(): Promise<string> {
     const url = `${this.customersUrl}ingredients`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -58,7 +62,7 @@ export class DataService {
   }
   getDp(id:number): Promise<string> {
     const url = `${this.customersUrl}getdp/${id}`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -72,7 +76,7 @@ export class DataService {
   }
   getCoupons(): Promise<string> {
     const url = `${this.customersUrl}coupons`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -86,7 +90,7 @@ export class DataService {
   }
   getPerson(): Promise<string> {
     const url = `${this.customersUrl}persons`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -100,7 +104,7 @@ export class DataService {
   }
   getTables(): Promise<string> {
     const url = `${this.customersUrl}tables`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -114,7 +118,7 @@ export class DataService {
   }
   getFreeTables(dt:Date): Promise<string> {
     const url = `${this.customersUrl}booking-tables/${dt}`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -128,7 +132,7 @@ export class DataService {
   }
   BookTable(id:number, person_id:string,currentdate:Date,booking_from:Date,booking_to:Date): Promise<string> {
     const url = `${this.customersUrl}booking-tables/${id}/${person_id}/${currentdate}/${booking_from}/${booking_to}`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -142,7 +146,7 @@ export class DataService {
   }
   getOrders(id:number): Promise<string> {
     const url = `${this.customersUrl}orders/${id}`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -156,7 +160,7 @@ export class DataService {
   }
   getOrderDetails(id:number): Promise<string> {
     const url = `${this.customersUrl}orders/details/${id}`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -170,7 +174,7 @@ export class DataService {
   }
   cancelOrder(id:number){
     const url = `${this.customersUrl}cancel_order`;
-    return this.http.post(url, {on_order_id: id})
+    return this.http.post(url, {on_order_id: id}, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -184,7 +188,7 @@ export class DataService {
   }
   orderDelivered(dp_id:number, id:number){
     const url = `${this.customersUrl}order_delivered`;
-    return this.http.post(url, {dp_id: dp_id, id:id})
+    return this.http.post(url, {dp_id: dp_id, id:id}, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -198,7 +202,7 @@ export class DataService {
   }
   dpFeedback(dpf:DpFeedback){
     const url = `${this.customersUrl}dp_feedback`;
-    return this.http.post(url, JSON.parse(JSON.stringify(dpf)))
+    return this.http.post(url, JSON.parse(JSON.stringify(dpf)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -212,7 +216,7 @@ export class DataService {
   }
   itemFeedback(itemf:ItemFeedback){
     const url = `${this.customersUrl}item_feedback`;
-    return this.http.post(url, JSON.parse(JSON.stringify(itemf)))
+    return this.http.post(url, JSON.parse(JSON.stringify(itemf)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -226,7 +230,7 @@ export class DataService {
   }
   signUp(person:Person){
     const url = `${this.customersUrl}signup`;
-    return this.http.post(url, JSON.parse(JSON.stringify(person)))
+    return this.http.post(url, JSON.parse(JSON.stringify(person)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -241,7 +245,7 @@ export class DataService {
 
   getCouponsPerson(id:number): Promise<string> {
     const url = `${this.customersUrl}coupons_person/${id}`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -256,7 +260,7 @@ export class DataService {
 
   getEstTime(id:number): Promise<string> {
     const url = `${this.customersUrl}get_est_time/${id}`;
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -271,7 +275,7 @@ export class DataService {
   getCart(id:number): Promise<string> {
     const url = `${this.customersUrl}cart/${id}`;
     console.log(id);
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -287,7 +291,7 @@ export class DataService {
   getCheckout(id:number): Promise<string> {
     const url = `${this.customersUrl}checkout/${id}`;
     console.log(id);
-    return this.http.get(url)
+    return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -301,7 +305,7 @@ export class DataService {
   }
   checkPerson(email:string, password:string): Promise<string> {
     const url = `${this.customersUrl}login`;
-    return this.http.get(url+"/"+email+"/"+password)
+    return this.http.get(url+"/"+email+"/"+password, {headers:this.headers})
                   .toPromise()
                  .then(response => {
                    var x= new Person();
@@ -336,7 +340,7 @@ export class DataService {
   }
   itemToCart(person_id:number, item_id:number, quantity:number): Promise<string> {
     const url = `${this.customersUrl}item_to_cart`;
-    return this.http.post(url, {person_id: person_id, item_id:item_id, quantity:quantity})
+    return this.http.post(url, {person_id: person_id, item_id:item_id, quantity:quantity}, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -351,7 +355,7 @@ export class DataService {
 
   addCoupon(coupon:Coupon): Promise<string> {
     const url = `${this.customersUrl}add_coupon`;
-    return this.http.post(url, JSON.parse(JSON.stringify(coupon)))
+    return this.http.post(url, JSON.parse(JSON.stringify(coupon)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -365,7 +369,7 @@ export class DataService {
   }
   addOnlineOrder(oo:OnlineOrder): Promise<string> {
     const url = `${this.customersUrl}add_onlineorder`;
-    return this.http.post(url, JSON.parse(JSON.stringify(oo)))
+    return this.http.post(url, JSON.parse(JSON.stringify(oo)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -377,11 +381,9 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
-
-
   addItem(item:Item): Promise<string> {
     const url = `${this.customersUrl}add_item`;
-    return this.http.post(url, JSON.parse(JSON.stringify(item)))
+    return this.http.post(url, JSON.parse(JSON.stringify(item)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -395,7 +397,7 @@ export class DataService {
   }
   updateItem(id:number, item:Item): Promise<string> {
     const url = `${this.customersUrl}update_item/${id}`;
-    return this.http.put(url, JSON.parse(JSON.stringify(item)))
+    return this.http.put(url, JSON.parse(JSON.stringify(item)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -410,7 +412,7 @@ export class DataService {
 //////////////////////////////////////////
   updateIngredient(id:number, item:Ingredient): Promise<string> {
     const url = `${this.customersUrl}update_ingredient/${id}`;
-    return this.http.put(url, JSON.parse(JSON.stringify(item)))
+    return this.http.put(url, JSON.parse(JSON.stringify(item)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -424,7 +426,7 @@ export class DataService {
   }
   updateCoupon(id:number, item:Coupon): Promise<string> {
     const url = `${this.customersUrl}update_coupon/${id}`;
-    return this.http.put(url, JSON.parse(JSON.stringify(item)))
+    return this.http.put(url, JSON.parse(JSON.stringify(item)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -438,7 +440,7 @@ export class DataService {
   }
   updatePerson(id:number, item:Person): Promise<string> {
     const url = `${this.customersUrl}update_person/${id}`;
-    return this.http.put(url, JSON.parse(JSON.stringify(item)))
+    return this.http.put(url, JSON.parse(JSON.stringify(item)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -452,7 +454,7 @@ export class DataService {
   }
   updateTable(id:number, table:Table): Promise<string> {
     const url = `${this.customersUrl}update_table/${id}`;
-    return this.http.put(url, JSON.parse(JSON.stringify(table)))
+    return this.http.put(url, JSON.parse(JSON.stringify(table)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -467,7 +469,7 @@ export class DataService {
 //////////////////////////////////////////
   deleteItem(id:number): Promise<string> {
     const url = `${this.customersUrl}delete_item/${id}`;
-    return this.http.delete(url)
+    return this.http.delete(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -482,7 +484,7 @@ export class DataService {
 
   deleteCart(person_id:number, item_id:number): Promise<string> {
     const url = `${this.customersUrl}delete_cart/${person_id}/${item_id}`;
-    return this.http.delete(url)
+    return this.http.delete(url, {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -496,7 +498,7 @@ export class DataService {
   }
   addIng(ing:Ingredient): Promise<string> {
     const url = `${this.customersUrl}add_ing`;
-    return this.http.post(url, JSON.parse(JSON.stringify(ing)))
+    return this.http.post(url, JSON.parse(JSON.stringify(ing)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -511,7 +513,7 @@ export class DataService {
 
   addTable(table:Table): Promise<string> {
     const url = `${this.customersUrl}add_table`;
-    return this.http.post(url, JSON.parse(JSON.stringify(table)))
+    return this.http.post(url, JSON.parse(JSON.stringify(table)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -526,7 +528,7 @@ export class DataService {
 
   addPerson(person:Person): Promise<string> {
     const url = `${this.customersUrl}add_person`;
-    return this.http.post(url, JSON.parse(JSON.stringify(person)))
+    return this.http.post(url, JSON.parse(JSON.stringify(person)), {headers:this.headers})
                .toPromise()
                .then(response => {
                   if(response!=undefined){
@@ -540,7 +542,7 @@ export class DataService {
   }
   // getCustomer(id: number): Promise<Customer> {
   //   const url = `${this.customersUrl}/${id}`;
-  //   return this.http.get(url)
+  //   return this.http.get(url, {headers:this.headers})
   //     .toPromise()
   //     .then(response => response.json() as Customer)
   //     .catch(this.handleError);

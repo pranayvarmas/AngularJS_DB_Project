@@ -1,5 +1,47 @@
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+  
+// Set up Global configuration access
+dotenv.config();
 var express = require('express');
 var app = express();
+
+app.post("/user/generateToken", (req, res) => {
+    // Validate User Here
+    // Then generate JWT Token
+  
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    let data = {
+        time: Date(),
+        userId: 12,
+    }
+  
+    const token = jwt.sign(data, jwtSecretKey);
+  
+    res.send(token);
+});
+app.get("/user/validateToken", (req, res) => {
+    // Tokens are generally passed in header of request
+    // Due to security reasons.
+  
+    let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+  
+    try {
+        const token = req.header(tokenHeaderKey);
+  
+        const verified = jwt.verify(token, jwtSecretKey);
+        if(verified){
+            return res.send("Successfully Verified");
+        }else{
+            // Access Denied
+            return res.status(401).send(error);
+        }
+    } catch (error) {
+        // Access Denied
+        return res.status(401).send(error);
+    }
+});
 // app.use(express.json()) // for parsing application/json
 // app.use(express.urlencoded({ extended: true }))
 const router = express.Router();
@@ -12,12 +54,12 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
 
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
     res.setHeader('Access-Control-Allow-Credentials', false);
-
+    
     // Pass to next layer of middleware
     next();
 });
@@ -27,6 +69,19 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({
     extended: true
   }));
+app.all(function(req, res){
+    var token=req.header('Authorization').replace('Bearer ', '');
+    var verified=jwt.verify(token, jwtSecretKey);
+    console.log("dfghj");
+    if(verified){
+        next();
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
+})
 app.use(bodyParser.json());
 var t=0;
 const { Client } = require('pg');
@@ -43,6 +98,7 @@ const e = require('express');
             console.error('Error connecting: %s', err);
         });
 app.get('/login/:email/:password', function(req, res) {
+    
     var email=req.params.email;
     var password=req.params.password;
     q=mysql.format("select * from persons where email = ? and password = ?;", [email, password]);
@@ -64,10 +120,17 @@ app.get('/login/:email/:password', function(req, res) {
                 })
             }
             else{
+                let jwtSecretKey = process.env.JWT_SECRET_KEY;
+                let data = {
+                    time: Date(),
+                    userId: res1.rows[0]['person_id'],
+                }
+                const token = jwt.sign(data, jwtSecretKey);
                 res.send({
                     success:true,
                     userExists:true,
-                    data:res1.rows
+                    data:res1.rows,
+                    token:token
                 })
             }
         }
@@ -77,8 +140,18 @@ app.get('/login/:email/:password', function(req, res) {
 })
 
 app.get('/items', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     q=mysql.format("select * from items order by item_id;");
-    // console.log(q);
+    // console.log(req.header('Authorization'));
     client.query(q, (err1, res1) =>{
         if(err1){
             console.error(err1.stack);
@@ -108,6 +181,16 @@ app.get('/items', function(req, res) {
 })
 
 app.get('/getdp/:id', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var id=req.params.id;
     q=mysql.format("select * from online_orders where dp_id=? order by on_order_id", id);
     q1=mysql.format("select * from delivery_persons where dp_id=?", id);
@@ -133,6 +216,16 @@ app.get('/getdp/:id', function(req, res) {
 
 
 app.get('/orders/:id', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var id=req.params.id;
     q=mysql.format("select * from online_orders, online_items where person_id=? and online_orders.on_order_id=online_items.on_order_id order by online_orders.on_order_id;", id);
     // console.log(q);
@@ -164,6 +257,16 @@ app.get('/orders/:id', function(req, res) {
     })
 })
 app.post('/cancel_order', function(req, res, next){
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var id=req.body['on_order_id'];
     q=mysql.format("update online_orders set is_cancelled=true where on_order_id=?", id);
     var date=new Date().toLocaleDateString();
@@ -204,6 +307,16 @@ app.post('/cancel_order', function(req, res, next){
     })
 })
 app.post('/order_delivered', function(req, res, next){
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var inp=req.body;
     var date=new Date().toLocaleDateString();
     var time=new Date().toLocaleTimeString();
@@ -235,6 +348,16 @@ app.post('/order_delivered', function(req, res, next){
 })
 
 app.post('/dp_feedback', function(req, res, next){
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var inp=req.body;
     q=mysql.format("insert into dp_feedback(dp_id, person_id, feedback_txt, suggestions, rating) values(?, ?, ?, ?, ?);", [inp['dp_id'], inp['person_id'], inp['feedback_txt'], inp['suggestions'], inp['rating']]);
     q1=mysql.format("update online_orders set dp_feedback=true where on_order_id=?", inp['on_order_id']);
@@ -260,6 +383,16 @@ app.post('/dp_feedback', function(req, res, next){
     })
 })
 app.post('/item_feedback', function(req, res, next){
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var inp=req.body;
     q=mysql.format("insert into item_feedback(item_id, person_id, feedback_txt, suggestions, rating) values(?, ?, ?, ?, ?);", [inp['item_id'], inp['person_id'], inp['feedback_txt'], inp['suggestions'], inp['rating']]);
     q1=mysql.format("update online_orders set item_feedback=true where on_order_id=?", inp['on_order_id']);
@@ -286,6 +419,16 @@ app.post('/item_feedback', function(req, res, next){
 })
 
 app.post('/signup', function(req, res, next){
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var inp=req.body;
     q=mysql.format("insert into persons(person_name, person_type, type_from, type_to, address, phone_no, salary, email, password) values(?, ?, ?, ?, ?, ?, ?, ?, ?);", [inp['person_name'], inp['person_type'], inp['type_from'], inp['type_to'], inp['address'], inp['phone_no'], inp['salary'], inp['email'], inp['password']]);
     // q1=mysql.format("update online_orders set item_feedback=true where on_order_id=?", inp['on_order_id']);
@@ -308,6 +451,16 @@ app.post('/signup', function(req, res, next){
     })
 })
 app.get('/orders/details/:id', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var id=req.params.id;
     q=mysql.format("select * from online_orders where on_order_id=?;", parseInt(id));
     console.log(q);
@@ -392,6 +545,16 @@ app.get('/orders/details/:id', function(req, res) {
 })
 
 app.get('/ingredients', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     q=mysql.format("select * from ingredients order by ing_id;");
     // console.log(q);
     client.query(q, (err1, res1) =>{
@@ -422,6 +585,16 @@ app.get('/ingredients', function(req, res) {
     })
 })
 app.get('/cart/:id', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var id=req.params.id;
     console.log(id);
     q=mysql.format("select * from cart where person_id = ? order by item_id;", id);
@@ -455,6 +628,16 @@ app.get('/cart/:id', function(req, res) {
 })
 
 app.get('/coupons_person/:id', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var id=req.params.id;
     console.log(id);
     q=mysql.format("select * from coupons_users, coupons where person_id = ? and coupons_users.coupon_id=coupons.coupon_id order by coupons.coupon_id;", id);
@@ -488,6 +671,16 @@ app.get('/coupons_person/:id', function(req, res) {
 })
 
 app.get('/get_est_time/:id', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var id=req.params.id;
     console.log(id);
     q=mysql.format("SELECT ST_DistanceSpheroid(geometry(a.location), geometry(b.location), 'SPHEROID[\"WGS 84\",6378137,298.257223563]') FROM spatial a, spatial b WHERE a.id=? AND b.id=?;", [1, parseInt(id)]);
@@ -629,6 +822,16 @@ app.get('/get_est_time/:id', function(req, res) {
 })
 
 app.get('/checkout/:id', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var id=req.params.id;
     console.log(id);
     q=mysql.format("select items.item_id, item_name, person_id, price, availability, quantity, item_type from cart, items where person_id = ? and items.item_id=cart.item_id order by items.item_id;", id);
@@ -683,6 +886,16 @@ app.get('/checkout/:id', function(req, res) {
     // })
     // })
 app.post('/item_to_cart', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var inp = req.body;
     q0=mysql.format("select * from cart where person_id = ? and item_id = ?", [inp['person_id'], inp['item_id']])
@@ -738,6 +951,16 @@ app.post('/item_to_cart', function(req, res, next) {
 })
 
 app.post('/add_onlineorder', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var inp = req.body;
     q=mysql.format("select * from cart where person_id=?", inp["person_id"]);
@@ -833,6 +1056,16 @@ app.post('/add_onlineorder', function(req, res, next) {
 })
 
 app.post('/add_coupon', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var inp = req.body;
     q=mysql.format("insert into coupons( coupon_txt, coupon_type, availability, start_date, end_date) values (?, ?, ?, ?, ?)", [inp['coupon_txt'], inp['coupon_type'], inp['availability'], inp['start_date'], inp['end_date']]);
@@ -853,6 +1086,16 @@ app.post('/add_coupon', function(req, res, next) {
     })
 })
 app.post('/add_person', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var inp = req.body;
     q=mysql.format("insert into persons( person_name, person_type, type_from, type_to, address, phone_no, salary, email, password) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", [inp['person_name'], inp['person_type'], inp['type_from'], inp['type_to'], inp['address'], inp['phone_no'], inp['salary'], inp['email'], inp['password']]);
@@ -873,6 +1116,16 @@ app.post('/add_person', function(req, res, next) {
     })
 })
 app.post('/add_table', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var inp = req.body;
     q=mysql.format("insert into tables( table_type, capacity, price) values (?, ?, ?)", [inp['table_type'], inp['capacity'], inp['price']]);
@@ -893,6 +1146,16 @@ app.post('/add_table', function(req, res, next) {
     })
 })
 app.post('/add_item', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var inp = req.body;
     q=mysql.format("insert into items( item_name, item_type, availability, price) values (?, ?, ?, ?)", [inp['item_name'], inp['item_type'], inp['availability'], inp['price']]);
@@ -914,6 +1177,16 @@ app.post('/add_item', function(req, res, next) {
 })
 
 app.put('/update_item/:id', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var id=req.params.id;
     var inp = req.body;
@@ -937,6 +1210,16 @@ app.put('/update_item/:id', function(req, res, next) {
 
 
 app.delete('/delete_item/:id', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var id = req.params.id;
     console.log(id);
@@ -959,6 +1242,16 @@ app.delete('/delete_item/:id', function(req, res, next) {
     })
 })
 app.delete('/delete_cart/:person_id/:item_id', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var person_id = req.params.person_id;
     var item_id = req.params.item_id;
@@ -983,6 +1276,16 @@ app.delete('/delete_cart/:person_id/:item_id', function(req, res, next) {
 })
 
 app.post('/add_ing', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var inp = req.body;
     q=mysql.format("insert into ingredients( ing_name, availability, price) values (?, ?, ?)", [inp['ing_name'], inp['availability'], inp['price']]);
@@ -1017,6 +1320,16 @@ app.post('/add_ing', function(req, res, next) {
 //     })
 // })
 app.get('/staff', function (req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // res.send('Hello World');
     q="select distinct person_name from persons";
     client.query(q, (err1, res1) => {
@@ -1030,6 +1343,16 @@ app.get('/staff', function (req, res) {
     })
 })
 app.get('/items_left', function (req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // res.send('Hello World');
     q="Select * from items where availability > 0 order by item_id limit 100";
     client.query(q, (err1, res1) => {
@@ -1059,6 +1382,16 @@ app.get('/items_left', function (req, res) {
 //     })
 // })
 app.get('/purchases', function (req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // res.send('Hello World');
     q="Select * from purchases  limit 5";
     const q1={
@@ -1234,6 +1567,16 @@ app.get('/purchases', function (req, res) {
 // })
 //////////////////////////////////////////////////////////////////////////
 app.get('/ingredients', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     q=mysql.format("select * from ingredients order by ing_id;");
     // console.log(q);
     client.query(q, (err1, res1) =>{
@@ -1264,6 +1607,16 @@ app.get('/ingredients', function(req, res) {
     })
 })
 app.get('/coupons', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     q=mysql.format("select * from coupons order by coupon_id;");
     // console.log(q);
     client.query(q, (err1, res1) =>{
@@ -1294,6 +1647,16 @@ app.get('/coupons', function(req, res) {
     })
 })
 app.get('/persons', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     q=mysql.format("select * from persons order by person_id;");
     // console.log(q);
     client.query(q, (err1, res1) =>{
@@ -1324,6 +1687,16 @@ app.get('/persons', function(req, res) {
     })
 })
 app.get('/tables', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     q=mysql.format("select * from tables order by table_id;");
     // console.log(q);
     client.query(q, (err1, res1) =>{
@@ -1354,6 +1727,16 @@ app.get('/tables', function(req, res) {
     })
 })
 app.get('/booking-tables/:dt', function(req, res) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     var x=req.params.dt;
     //dateString = 'Wed Mar 19 00:30:00 IST 1997';
     var date = new Date(x.replace('IST', ''));
@@ -1400,6 +1783,16 @@ app.get('/booking-tables/:dt', function(req, res) {
     })
 })
 app.put('/update_ingredient/:id', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var id=req.params.id;
     var inp = req.body;
@@ -1421,6 +1814,16 @@ app.put('/update_ingredient/:id', function(req, res, next) {
     })
 })
 app.put('/update_coupon/:id', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var id=req.params.id;
     var inp = req.body;
@@ -1442,6 +1845,16 @@ app.put('/update_coupon/:id', function(req, res, next) {
     })
 })
 app.put('/update_person/:id', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var id=req.params.id;
     var inp = req.body;
@@ -1463,6 +1876,16 @@ app.put('/update_person/:id', function(req, res, next) {
     })
 })
 app.put('/update_table/:id', function(req, res, next) {
+    var token=req.header('Authorization').replace('Bearer ', '');
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    var verified=jwt.verify(token, jwtSecretKey);
+    if(verified){
+    }
+    else{
+        res.send({
+            success:false
+        })
+    }
     // var inp=JSON.parse(Object.keys(req.body)[0]);
     var id=req.params.id;
     var inp = req.body;
