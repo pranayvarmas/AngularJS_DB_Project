@@ -1835,6 +1835,71 @@ app.post('/add-booking-tables', function(req, res, next) {
         }
     })
 })
+app.get('/offlineorders', function(req, res) {
+    console.log("ab");
+    q=mysql.format("select * from offline_orders;");
+     console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    ordersExists:false,
+                    data:[]
+                })
+            }
+            else{
+                console.log(res1.rows);
+                res.send({
+                    success:true,
+                    ordersExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
+app.get('/offlineorders/details/:id', function(req, res) {
+    console.log("ab");
+    var id = Number(req.params.id);
+    q=mysql.format("select * from offline_items where off_order_id = ? ;",[id]);
+     console.log(q);
+    client.query(q, (err1, res1) =>{
+        if(err1){
+            console.error(err1.stack);
+            res.send({
+                success:false
+            })
+        }
+        else{
+            // console.log("Not Error");
+            if(res1.rows.length==0){
+                res.send({
+                    success:true,
+                    ordersExists:false,
+                    data:[]
+                })
+            }
+            else{
+                console.log(res1.rows);
+                res.send({
+                    success:true,
+                    ordersExists:true,
+                    data:res1.rows
+                })
+            }
+            // console.log(res1.rows);
+        }
+    })
+})
 app.put('/update_ingredient/:id', function(req, res, next) {
     var token=req.header('Authorization').replace('Bearer ', '');
     let jwtSecretKey = process.env.JWT_SECRET_KEY;

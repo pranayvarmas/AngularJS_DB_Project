@@ -164,6 +164,37 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
+  getOfflineOrders(): Promise<string> {
+    console.log("hi");
+    const url = `${this.customersUrl}offlineorders`;
+    return this.http.get(url, {headers:this.headers})
+               .toPromise()
+               .then(response => {
+                 console.log("ppp");
+                  if(response!=undefined){
+                    console.log("jjj");
+                    return response.json();
+                  }
+                  else{
+                    console.log("OfflineOrders Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }   
+  getOfflineOrderDetails(id:number): Promise<string> {
+    const url = `${this.customersUrl}offlineorders/details/${id}`;
+    return this.http.get(url, {headers:this.headers})
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("OfflineOrders Details Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }   
   getOrders(id:number): Promise<string> {
     const url = `${this.customersUrl}orders/${id}`;
     return this.http.get(url, {headers:this.headers})
