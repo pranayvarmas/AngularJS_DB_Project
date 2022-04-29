@@ -1,33 +1,49 @@
-<div class="text-center">
-  <h3>Login Form</h3>
+<div id="newvenue" class="newvenue">
+  <div class="container">
+
+    <div class="section-title" data-aos="fade-in" data-aos-delay="100">
+      <h2>Login</h2>
+      <!-- {/* <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p> */} -->
+    </div>
+<div [hidden]="submitted">
+        <div class="row">
+          <div class="col align-items-stretch mb-5 mb-lg-3">
+            <div class="icon-box rowc" data-aos="fade-up">
+              <form (ngSubmit)="checkPerson()" role="form" class="php-email-form">
+              <div class="row">
+                <div class="form-group mt-3">
+                  <!-- <label for="email">Email</label> -->
+                  <input type="text" class="form-control" id="email" placeholder="Email" required
+                  [(ngModel)]="email" name="email">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group mt-3">
+                  <!-- <label for="password">Password</label> -->
+                  <input type="text" class="form-control" id="password" placeholder="Password" required
+                  [(ngModel)]="password" name="password">
+                </div>
+              </div>
+              <br>
+              <div class="text-center"><button class="about-btn" type="submit">Login</button></div>
+    </form>
   </div>
-  <div [hidden]="submitted">
-      <form (ngSubmit)="checkPerson()">
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="text" class="form-control" id="email" required
-          [(ngModel)]="email" name="email">
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="text" class="form-control" id="password" required
-          [(ngModel)]="password" name="password">
-        </div>
-        <div class="btn-group">
-      <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
-        <button type="submit" class="btn btn-success">Submit</button>
-      <!-- <button class="btn btn-danger" (click)="delete()">Delete</button> -->
-      </div>
-
-      </form>
+  </div>
+  </div>
   </div>
 
   <div [hidden]="!submitted">
-      <h4>Update successfully!</h4>
-      <div class="btn-group">
-        <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
-        <!-- <button class="btn btn-success" (click)="submitted=false">Edit</button> -->
-      </div>
-  </div>
+    <!-- <h4>Update successfully!</h4>
+    <div class="btn-group"> -->
+                <br>
+                <h3>Loading...</h3>
+                <br>
+
+    <!-- </div> -->
+</div>
+</div>
+</div>
+
+

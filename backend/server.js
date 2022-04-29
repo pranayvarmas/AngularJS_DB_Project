@@ -107,6 +107,31 @@ app.get('/items', function(req, res) {
     })
 })
 
+app.get('/getdp/:id', function(req, res) {
+    var id=req.params.id;
+    q=mysql.format("select * from online_orders where dp_id=? order by on_order_id", id);
+    q1=mysql.format("select * from delivery_persons where dp_id=?", id);
+    var data;
+    var data1;
+    client.query("begin")
+    .then(res1 => {
+        return client.query(q);
+    })
+    .then(res2 => {
+        data=res2.rows;
+        return client.query(q1);
+    })
+    .then(res3 =>{
+        data1=res3.rows;
+        res.send({
+            success:true,
+            data:data,
+            data1:data1
+        })
+    })
+})
+
+
 app.get('/orders/:id', function(req, res) {
     var id=req.params.id;
     q=mysql.format("select * from online_orders, online_items where person_id=? and online_orders.on_order_id=online_items.on_order_id order by online_orders.on_order_id;", id);
@@ -165,6 +190,110 @@ app.post('/cancel_order', function(req, res, next){
     })
     .then((res5) =>{
         // console.log("q4");
+        res.send({
+            success:true
+        })
+        return client.query("commit");
+    })
+    .catch((err) =>{
+        console.log(err);
+        return client.query("rollback");
+    })
+    .catch((err) =>{
+        console.log("error rolling back");
+    })
+})
+app.post('/order_delivered', function(req, res, next){
+    var inp=req.body;
+    var date=new Date().toLocaleDateString();
+    var time=new Date().toLocaleTimeString();
+    q=mysql.format("update online_orders set is_delivered=True,delivery_date=?,delivery_time=? where on_order_id=?", [date, time, inp['id']]);
+    q1=mysql.format("update delivery_persons set availability=True where dp_id=?", inp['dp_id']);
+    console.log(q);
+    console.log(q1);
+    client.query("begin")
+    .then((res1) => {
+        return client.query(q)
+    })
+    .then((res2) =>{
+        return client.query(q1)
+    })
+    .then((res5) =>{
+        // console.log("q4");
+        res.send({
+            success:true
+        })
+        return client.query("commit");
+    })
+    .catch((err) =>{
+        console.log(err);
+        return client.query("rollback");
+    })
+    .catch((err) =>{
+        console.log("error rolling back");
+    })
+})
+
+app.post('/dp_feedback', function(req, res, next){
+    var inp=req.body;
+    q=mysql.format("insert into dp_feedback(dp_id, person_id, feedback_txt, suggestions, rating) values(?, ?, ?, ?, ?);", [inp['dp_id'], inp['person_id'], inp['feedback_txt'], inp['suggestions'], inp['rating']]);
+    q1=mysql.format("update online_orders set dp_feedback=true where on_order_id=?", inp['on_order_id']);
+    client.query("begin")
+    .then((res1) => {
+        return client.query(q)
+    })
+    .then((res2) =>{
+        return client.query(q1)
+    })
+    .then((res3) =>{
+        res.send({
+            success:true
+        })
+        return client.query("commit");
+    })
+    .catch((err) =>{
+        console.log(err);
+        return client.query("rollback");
+    })
+    .catch((err) =>{
+        console.log("error rolling back");
+    })
+})
+app.post('/item_feedback', function(req, res, next){
+    var inp=req.body;
+    q=mysql.format("insert into item_feedback(item_id, person_id, feedback_txt, suggestions, rating) values(?, ?, ?, ?, ?);", [inp['item_id'], inp['person_id'], inp['feedback_txt'], inp['suggestions'], inp['rating']]);
+    q1=mysql.format("update online_orders set item_feedback=true where on_order_id=?", inp['on_order_id']);
+    client.query("begin")
+    .then((res1) => {
+        return client.query(q)
+    })
+    .then((res2) =>{
+        return client.query(q1)
+    })
+    .then((res3) =>{
+        res.send({
+            success:true
+        })
+        return client.query("commit");
+    })
+    .catch((err) =>{
+        console.log(err);
+        return client.query("rollback");
+    })
+    .catch((err) =>{
+        console.log("error rolling back");
+    })
+})
+
+app.post('/signup', function(req, res, next){
+    var inp=req.body;
+    q=mysql.format("insert into persons(person_name, person_type, type_from, type_to, address, phone_no, salary, email, password) values(?, ?, ?, ?, ?, ?, ?, ?, ?);", [inp['person_name'], inp['person_type'], inp['type_from'], inp['type_to'], inp['address'], inp['phone_no'], inp['salary'], inp['email'], inp['password']]);
+    // q1=mysql.format("update online_orders set item_feedback=true where on_order_id=?", inp['on_order_id']);
+    client.query("begin")
+    .then((res1) => {
+        return client.query(q)
+    })
+    .then((res3) =>{
         res.send({
             success:true
         })

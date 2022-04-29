@@ -26,6 +26,10 @@ import { AddTablesComponent } from './add-tables/add-tables.component';
 import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { ShowOrdersComponent } from './show-orders/show-orders.component';
+import { DpDetailsComponent } from './dp-details/dp-details.component';
+import { ItemDetailsComponent } from './item-details/item-details.component';
+import { DpFeedbackComponent } from './dp-feedback/dp-feedback.component';
+import { ItemFeedbackComponent } from './item-feedback/item-feedback.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +46,11 @@ import { ShowOrdersComponent } from './show-orders/show-orders.component';
     AddTablesComponent,
     CartComponent,
     CheckoutComponent,
-    ShowOrdersComponent
+    ShowOrdersComponent,
+    DpDetailsComponent,
+    ItemDetailsComponent,
+    DpFeedbackComponent,
+    ItemFeedbackComponent
   ],
   imports: [
     BrowserModule,

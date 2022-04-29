@@ -13,6 +13,7 @@ export class ShowItemsComponent implements OnInit {
   items: Item[]=[]
   uItems: Item[]=[]
   x="";
+  showitem=false;
   uItem=new Item;
   showBox=false;
   constructor(private dataService: DataService, private cookie: CookieService, private loginService: LoginService) {}
@@ -22,6 +23,7 @@ export class ShowItemsComponent implements OnInit {
     var i=new Item;
     this.uItems=this.items;
     var j;
+    this.showitem=true;
     for(var k=0; k<this.uItems.length; k++){
       if(this.uItems[k].item_id==id){
         j=this.uItems[k];

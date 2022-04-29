@@ -6,7 +6,7 @@ import { LoginService } from '../login.service';
 // import { ConsoleReporter } from 'jasmine';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })

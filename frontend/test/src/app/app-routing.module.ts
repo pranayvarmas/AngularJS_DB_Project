@@ -12,9 +12,12 @@ import { CartComponent } from './cart/cart.component';
 import { ShowOrdersComponent } from './show-orders/show-orders.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { DpDetailsComponent } from './dp-details/dp-details.component';
+import { DpFeedbackComponent } from './dp-feedback/dp-feedback.component';
+import { ItemFeedbackComponent } from './item-feedback/item-feedback.component';
 
 const routes: Routes = [
-   { path: '', redirectTo: 'customer', pathMatch: 'full' },
+   { path: '', redirectTo: 'login', pathMatch: 'full' },
    { path: 'login',  component: LoginComponent },
    { path: 'signup', component: SignupComponent },
    { path: 'items', component: ShowItemsComponent },
@@ -27,6 +30,9 @@ const routes: Routes = [
    { path: 'cart', component: CartComponent },
    { path: 'checkout', component: CheckoutComponent },
    { path: 'orders', component: ShowOrdersComponent },
+   { path: 'dpDetails/:id', component: DpDetailsComponent},
+   { path: 'dp_feedback/:order_id/:id', component: DpFeedbackComponent},
+   { path: 'item_feedback/:order_id/:id', component: ItemFeedbackComponent}
 
 ];
 

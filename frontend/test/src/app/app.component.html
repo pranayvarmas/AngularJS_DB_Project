@@ -1,13 +1,51 @@
 
-<div class="jumbotron text-center">
-  <h2 style="color: green">Restaurant Management System</h2>
-  <nav>
-    <a routerLink="login" class="btn btn-primary active" role="button" routerLinkActive="active">Login</a>
-    <br/>
-    <a routerLink="signup" class="btn btn-primary active" role="button" routerLinkActive="active">Signup</a>
-    <br/>
-    <button class="btn btn-primary" (click)="logOut()">Logout</button>
+ <header id="header" class="fixed-top header-transparent">
+    <div class="container d-flex align-items-center justify-content-between">
 
-  </nav>
-  </div>
+      <div class="logo">
+        <h1 class="text-light"><a href="/"><span>Restaurant Management System</span></a></h1>
+      </div>
+      <div [hidden]="!isLogged">
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="/">Home</a></li>
+          <li><a class="nav-link scrollto" href="/items">Items</a></li>
+          <li><a class="nav-link scrollto" href="/orders">Orders</a></li>
+          <li><a class="nav-link scrollto" href="/cart">Cart</a></li>
+          <!-- <li><a class="nav-link scrollto" href="/venues/add">New Venue</a></li> -->
+          <li class="dropdown"><a href="#"><span>Profile</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="/admin">Admin</a></li>
+              <li><a href="/settings">Settings</a></li>
+              <li><a (click)="logOut()">Logout</a></li>
+              <!-- <li><button class="btn btn-primary" (click)="logOut()">Back</button></li> -->
+              <!-- <li><a href="/pointstable/2017">2017</a></li> -->
+            </ul>
+          </li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+      </div>
+      <div [hidden]="isLogged">
+        <nav id="navbar" class="navbar">
+          <ul>
+            <li><a class="nav-link scrollto active" href="/">Home</a></li>
+            <li><a class="nav-link scrollto" href="/login">Login</a></li>
+            <li><a class="nav-link scrollto" href="/signup">Signup</a></li>
+            <!-- <li><a class="nav-link scrollto" href="/venues">Cart</a></li> -->
+            <!-- <li><a class="nav-link scrollto" href="/venues/add">New Venue</a></li> -->
+            <!-- <li class="dropdown"><a href="#"><span>Points Table</span> <i class="bi bi-chevron-down"></i></a> -->
+              <!-- <ul> -->
+                <!-- <li><a href="/pointstable/2011">2011</a></li> -->
+                <!-- <li><a href="/pointstable/2013">2013</a></li> -->
+                <!-- <li><a href="/pointstable/2015">2015</a></li> -->
+                <!-- <li><a href="/pointstable/2017">2017</a></li> -->
+              <!-- </ul> -->
+            <!-- </li> -->
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav><!-- .navbar -->
+      </div>
+    </div>
+  </header>
   <router-outlet></router-outlet>

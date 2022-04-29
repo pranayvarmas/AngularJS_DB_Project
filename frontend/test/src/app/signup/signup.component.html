@@ -1,1 +1,89 @@
-<p>signup works!</p>
+<div id="newvenue" class="newvenue">
+  <div class="container">
+
+    <div class="section-title" data-aos="fade-in" data-aos-delay="100">
+      <h2>Signup</h2>
+      <!-- {/* <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p> */} -->
+    </div>
+
+<div [hidden]="submitted">
+  <div class="row">
+    <div class="col align-items-stretch mb-5 mb-lg-3">
+      <div class="icon-box rowc" data-aos="fade-up">
+      <form (ngSubmit)="signUp()" role="form" class="php-email-form">
+        <div class="row">
+          <div class="form-group mt-3">
+          <input type="text" class="form-control" id="email" required
+          [(ngModel)]="person.email" name="email" placeholder="Email">
+        </div>
+      </div>
+
+
+        <div class="row">
+          <div class="form-group mt-3">
+            <input type="text" class="form-control" id="password" required
+              [(ngModel)]="person.password" name="password" placeholder="Password">
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="form-group mt-3">
+            <input type="text" class="form-control" id="name" required
+            [(ngModel)]="person.person_name" name="name" placeholder="Name">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group mt-3">
+          <input type="text" class="form-control" id="type" required
+          [(ngModel)]="person.person_type" name="type"  placeholder="Role">
+        </div>
+        </div>
+        <div class="row">
+          <div class="form-group mt-3">
+          <input type="Date" class="form-control" id="type_from" required
+          [(ngModel)]="person.type_from" name="type_from" placeholder="From Date">
+        </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group mt-3">
+          <input type="Date" class="form-control" id="type_to" required
+          [(ngModel)]="person.type_from" name="type_to" placeholder="To Date">
+        </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group mt-3">
+          <input type="number" class="form-control" id="address" required
+          [(ngModel)]="person.address" name="address" placeholder="Address">
+        </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group mt-3">
+          <input type="number" class="form-control" id="phone_no" required
+          [(ngModel)]="person.phone_no" name="phone_no" placeholder="Phone No">
+        </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group mt-3">
+          <input type="number" class="form-control" id="salary" required
+          [(ngModel)]="person.salary" name="salary" placeholder="Salary">
+        </div>
+        </div>
+        <br>
+        <div class="text-center"><button class="about-btn" type="submit">Submit</button></div>
+
+      </form>
+  </div>
+
+  <div [hidden]="!submitted">
+      <h4>Signup successfully!</h4>
+      <div class="btn-group">
+        <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
+        <!-- <button class="btn btn-success" (click)="submitted=false">Edit</button> -->
+      </div>
+  </div>

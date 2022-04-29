@@ -9,9 +9,18 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class AppComponent {
   title = 'test';
+  isLogged=false;
   constructor(private cookie: CookieService){}
   logOut(){
     this.cookie.deleteAll();
     window.location.href="/login";
+  }
+  ngOnInit(): void {
+    if(this.cookie.get('person_id')==""){
+      this.isLogged=false;
+    }
+    else{
+      this.isLogged=true;
+    }
   }
 }

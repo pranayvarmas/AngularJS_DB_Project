@@ -16,6 +16,8 @@ import { Ingredient } from './ingredient';
 import { Table } from './table';
 import { identifierName } from '@angular/compiler';
 import { OnlineOrder } from './online_order';
+import { DpFeedback } from './dp_feedback';
+import { ItemFeedback } from './item_feedback';
 
 @Injectable()
 export class DataService {
@@ -40,7 +42,6 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
-////////////////////////////////////////////////////////////////  
   getIngredients(): Promise<string> {
     const url = `${this.customersUrl}ingredients`;
     return this.http.get(url)
@@ -54,7 +55,21 @@ export class DataService {
                     return {};
                   }})
                .catch(this.handleError);
-  }  
+  }
+  getDp(id:number): Promise<string> {
+    const url = `${this.customersUrl}getdp/${id}`;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Dp Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
   getCoupons(): Promise<string> {
     const url = `${this.customersUrl}coupons`;
     return this.http.get(url)
@@ -68,7 +83,7 @@ export class DataService {
                     return {};
                   }})
                .catch(this.handleError);
-  }    
+  }
   getPerson(): Promise<string> {
     const url = `${this.customersUrl}persons`;
     return this.http.get(url)
@@ -110,7 +125,7 @@ export class DataService {
                     return {};
                   }})
                .catch(this.handleError);
-  }   
+  }
   BookTable(id:number, person_id:string,currentdate:Date,booking_from:Date,booking_to:Date): Promise<string> {
     const url = `${this.customersUrl}booking-tables/${id}/${person_id}/${currentdate}/${booking_from}/${booking_to}`;
     return this.http.get(url)
@@ -125,7 +140,6 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
-////////////////////////////////////////////////////////////////////   
   getOrders(id:number): Promise<string> {
     const url = `${this.customersUrl}orders/${id}`;
     return this.http.get(url)
@@ -168,6 +182,63 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
+  orderDelivered(dp_id:number, id:number){
+    const url = `${this.customersUrl}order_delivered`;
+    return this.http.post(url, {dp_id: dp_id, id:id})
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("OrderDelivered Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+  dpFeedback(dpf:DpFeedback){
+    const url = `${this.customersUrl}dp_feedback`;
+    return this.http.post(url, JSON.parse(JSON.stringify(dpf)))
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("DpFeedback Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+  itemFeedback(itemf:ItemFeedback){
+    const url = `${this.customersUrl}item_feedback`;
+    return this.http.post(url, JSON.parse(JSON.stringify(itemf)))
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("ItemFeedback Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+  signUp(person:Person){
+    const url = `${this.customersUrl}signup`;
+    return this.http.post(url, JSON.parse(JSON.stringify(person)))
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Signup Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+
   getCouponsPerson(id:number): Promise<string> {
     const url = `${this.customersUrl}coupons_person/${id}`;
     return this.http.get(url)
@@ -350,7 +421,7 @@ export class DataService {
                     return {};
                   }})
                .catch(this.handleError);
-  }  
+  }
   updateCoupon(id:number, item:Coupon): Promise<string> {
     const url = `${this.customersUrl}update_coupon/${id}`;
     return this.http.put(url, JSON.parse(JSON.stringify(item)))
@@ -364,7 +435,7 @@ export class DataService {
                     return {};
                   }})
                .catch(this.handleError);
-  }    
+  }
   updatePerson(id:number, item:Person): Promise<string> {
     const url = `${this.customersUrl}update_person/${id}`;
     return this.http.put(url, JSON.parse(JSON.stringify(item)))
@@ -393,7 +464,7 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
-//////////////////////////////////////////  
+//////////////////////////////////////////
   deleteItem(id:number): Promise<string> {
     const url = `${this.customersUrl}delete_item/${id}`;
     return this.http.delete(url)

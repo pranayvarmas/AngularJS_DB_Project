@@ -1,45 +1,65 @@
-<div class="text-center">
-  <h3 style="color:black">Items List:</h3>
-  </div>
+<div id="newvenue" class="newvenue">
   <div class="container">
+
+    <div class="section-title" data-aos="fade-in" data-aos-delay="100">
+      <h2>Items</h2>
+      </div>
+<!-- <div class="container"> -->
     <div [hidden]="!showBox">
-      <form (ngSubmit)="updateItem()">
+      <div class="row">
+        <div class="col align-items-stretch mb-5 mb-lg-3">
+          <div class="icon-box rowc" data-aos="fade-up">
 
-        <div class="form-group">
-          <label for="item_name">Item Name</label>
+      <form (ngSubmit)="updateItem()"  role="form" class="php-email-form">
+        <div class="row">
+          <div class="form-group mt-3">
+
           <input type="text" class="form-control" id="item_name" required
-          [(ngModel)]="uItem.item_name" name="item_name">
+          [(ngModel)]="uItem.item_name" name="item_name" placeholder="Item Name">
         </div>
+        </div>
+        <div class="row">
+          <div class="form-group mt-3">
 
-        <div class="form-group">
-          <label for="item_type">Item Type</label>
-          <input type="text" class="form-control" id="item_type" required
+        <input type="text" class="form-control" id="item_type" required
           [(ngModel)]="uItem.item_type" name="item_type">
         </div>
+        </div>
+        <div class="row">
+          <div class="form-group mt-3">
 
-        <div class="form-group">
-          <label for="price">Price</label>
-          <input type="number" class="form-control" id="price" required
+        <input type="number" class="form-control" id="price" required
           [(ngModel)]="uItem.price" name="price">
         </div>
+        </div>
+        <div class="row">
+          <div class="form-group mt-3">
 
-        <div class="form-group">
-          <label for="availability">Availability</label>
-          <input type="number" class="form-control" id="availability" required
+        <input type="number" class="form-control" id="availability" required
           [(ngModel)]="uItem.availability" name="availability">
         </div>
+</div>
+<br>
+<div class="text-center"><button class="about-btn" (click)="showBox=false;">Back</button><button class="about-btn" type="submit">Update</button></div>
+<!-- <div class="text-center"></div> -->
 
-        <div class="btn-group">
-      <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
-        <button type="submit" class="btn btn-success">Submit</button>
-      <!-- <button class="btn btn-danger" (click)="delete()">Delete</button> -->
-      </div>
 
       </form>
     </div>
-  <table class="table table-hover table-striped">
+    </div>
+    </div>
+    </div>
+    <div [hidden]="showBox" class="row">
+      <div class="col align-items-stretch mb-5 mb-lg-3">
+        <div class="icon-box rowc" data-aos="fade-up">
+          <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+          <div class="panel panel-primary">
+            <div class="panel-heading"></div>
+            <div class=" table table-responsive">
+              <table class="table table-responsive">
+  <!-- <table class="table table-hover table-striped"> -->
       <thead>
-          <tr>
+          <tr scope="row">
               <th>ID</th>
               <th>Name</th>
               <th>Availability</th>
@@ -49,7 +69,7 @@
           </tr>
       </thead>
       <tbody>
-          <tr *ngFor="let item of items">
+          <tr *ngFor="let item of items" scope="row">
               <td>{{item.item_id}}</td>
               <td>{{item.item_name}}</td>
               <td>{{item.availability}}</td>
@@ -61,7 +81,14 @@
             </tr>
       </tbody>
   </table>
-  <a routerLink="/cart" class="btn btn-primary active" role="button" routerLinkActive="active">Cart</a>
-<br/>
+  </div>
+  </div>
+  <div class="text-center"><button class="about-btn" type="submit">Proceed to cart</button></div>
 
+      </div>
+        </div>
+        </div>
+    <!-- </div> -->
+
+  </div>
   </div>
