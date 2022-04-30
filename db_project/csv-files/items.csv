@@ -1,0 +1,10 @@
+item_id,item_name,item_type,availability,price
+1,'Caprese Salad','beverage',6,51
+2,'French fries with sausages','food',5,322
+3,'Ebiten maki','food',1,408
+4,'Fish and chips','food',5,189
+5,'Fish and chips','beverage',6,179
+6,'Caprese Salad','food',3,214
+7,'Tuna sashimi','beverage',9,391
+8,'Fish and chips','beverage',5,252
+9,'Vegetable Soup','beverage',9,474

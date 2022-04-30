@@ -1,0 +1,10 @@
+person_id,person_name,person_type,type_from,type_to,email,password,salary,address,phone_no
+1,'Kenneth Jones','Base Customer','2012-09-22','2013-10-22','markmiller@example.com','password1',26658,1,8376444605
+2,'Jordan Hartman','Chef','2012-12-19','2013-12-19','kylejordan@example.org','password3',16034,2,9661415733
+3,'Jeffrey Rivas','Premium Customer','2012-12-19','2013-09-22','baileyvanessa@example.org','password2',20031,3,8231994561
+4,'Jacob Mccoy','Base Customer','2012-10-22','2013-10-22','selena97@example.com','password3',46212,4,9863810212
+5,'Nathan Hubbard','Food Server','2012-01-12','2013-10-22','charlessanchez@example.org','password2',16585,5,8819154703
+6,'James Crawford','Food Server','2012-12-19','2013-01-12','robin88@example.net','password1',35128,6,8494025756
+7,'Jorge Nguyen','Delivery Person','2012-09-22','2013-10-22','herrerabarbara@example.com','password2',48009,7,8061662658
+8,'Michelle Ortega','Delivery Person','2012-09-22','2013-09-22','hudsoncory@example.com','password1',45439,8,7201898511
+9,'Crystal Owens','Chef','2012-10-22','2013-09-22','brian05@example.com','password3',35349,9,8071940218

@@ -1,0 +1,10 @@
+dp_f_id,dp_id,person_id,feedback_txt,suggestions,rating
+1,1,7,'Bad','Bad process',1
+2,2,4,'Good','Not liked',1
+3,3,7,'Good','Bad process',1
+4,4,4,'Bad','Not liked',1
+5,5,9,'Average','Found better option',4
+6,6,4,'Bad','Bad process',4
+7,7,4,'Average','Long time',2
+8,8,2,'Excellent','Found better option',1
+9,9,5,'Good','Not liked',0

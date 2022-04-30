@@ -1,0 +1,10 @@
+item_f_id,item_id,person_id,feedback_txt,suggestions,rating
+1,1,7,'Bad','Bad process',0
+2,2,7,'Bad','Found better option',4
+3,3,1,'Excellent','Not liked',5
+4,4,2,'Good','Found better option',5
+5,5,6,'Excellent','Long time',4
+6,6,5,'Good','Not liked',4
+7,7,2,'Excellent','Not liked',1
+8,8,2,'Bad','Bad process',2
+9,9,1,'Bad','Bad process',2

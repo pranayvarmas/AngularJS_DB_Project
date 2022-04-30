@@ -66,6 +66,8 @@ CREATE TABLE spatial (
     location Point NOT NULL,
     PRIMARY KEY (id)
 );
+CREATE SEQUENCE id_seq START WITH 10 INCREMENT BY 1;
+alter table spatial alter id set default nextval('id_seq');
 
 
 ----------Purchases information-----------------
@@ -77,7 +79,8 @@ CREATE TABLE purchases(
  quantity INT,
  PRIMARY  KEY(purchase_id)
 );
-
+CREATE SEQUENCE pur_seq START WITH 10 INCREMENT BY 1;
+alter table purchases alter purchase_id set default nextval('pur_seq');
 -------------Tables  information----------------
 CREATE TABLE tables(
  table_id INT,
@@ -98,11 +101,12 @@ CREATE TABLE delivery_persons(
  primary_no INT,
  secondary_no INT,
  phone_no TEXT,
- availability INT,
+ availability BOOL,
  salary INT,
  PRIMARY KEY(dp_id)
 );
-
+CREATE SEQUENCE dp_seq START WITH 10 INCREMENT BY 1;
+alter table delivery_persons alter dp_id set default nextval('dp_seq');
 --------------Item feedback information-------------------
 CREATE TABLE item_feedback(
  item_f_id INT,
@@ -115,7 +119,8 @@ CREATE TABLE item_feedback(
  FOREIGN KEY(item_id) references items on delete set null,
  FOREIGN KEY(person_id) references persons on delete set null
 );
-
+CREATE SEQUENCE if_seq START WITH 10 INCREMENT BY 1;
+alter table item_feedback alter item_f_id set default nextval('if_seq');
 --------------DP_feedback information-----------------------
 
 CREATE TABLE dp_feedback(
@@ -129,7 +134,8 @@ CREATE TABLE dp_feedback(
   FOREIGN KEY(dp_id) references delivery_persons on delete set null,
   FOREIGN KEY(person_id) references persons on delete set null
 );
-
+CREATE SEQUENCE dpf_seq START WITH 10 INCREMENT BY 1;
+alter table dp_feedback alter dp_f_id set default nextval('dpf_seq');
 ----------------offline orders information-----------
 CREATE TABLE offline_orders(
   off_order_id INT,
@@ -139,6 +145,9 @@ CREATE TABLE offline_orders(
   order_time TIME,
   PRIMARY KEY(off_order_id)
 );
+
+CREATE SEQUENCE off_orders_seq START WITH 10 INCREMENT BY 1;
+alter table offline_orders alter off_order_id set default nextval('off_orders_seq');
 
 
 -----------online orders information-------------------
@@ -152,7 +161,9 @@ CREATE TABLE online_orders(
   delivery_address  INT,
   is_delivered   BOOL,
   is_cancelled  BOOL,
-  estimated_time  TIME,
+  is_dp_feedback BOOL,
+  is_item_feedback BOOL,
+  estimated_time  INT,
   dp_id INT,
   delivery_date  DATE,
   delivery_time  TIME,
@@ -160,6 +171,8 @@ CREATE TABLE online_orders(
   FOREIGN KEY(person_id) references persons on delete set null,
   FOREIGN KEY(dp_id) references delivery_persons on delete set null
 );
+CREATE SEQUENCE on_orders_seq START WITH 10 INCREMENT BY 1;
+alter table online_orders alter on_order_id set default nextval('on_orders_seq');
 
 ---------------coupons information--------------------
 CREATE TABLE coupons(
@@ -187,6 +200,8 @@ CREATE TABLE cancellations(
   PRIMARY KEY(c_id),
   FOREIGN KEY(on_order_id) references online_orders on delete set null
 );
+CREATE SEQUENCE can_seq START WITH 10 INCREMENT BY 1;
+alter table cancellations alter c_id set default nextval('can_seq');
 -----------------------------------------------------------------------------------------------
 -----------------------------RELATIONS--------------------------
 -----------------------------------------------------------------------------------------------
@@ -199,7 +214,6 @@ CREATE TABLE item_ing(
   FOREIGN KEY(item_id) references items on delete set null,
   FOREIGN KEY(ing_id) references ingredients on delete set null
 );
-
 
 ----------------Cart---------------------------------------
 
@@ -338,7 +352,8 @@ CREATE TABLE book_tables(
   FOREIGN KEY(person_id) references persons on delete set null
 
 );
-
+CREATE SEQUENCE bt_seq START WITH 10 INCREMENT BY 1;
+alter table book_tables alter booking_id set default nextval('bt_seq');
 -----------------------cancelled orders------------------------------
 -- CREATE TABLE cancelled_orders(
 --    id INT,
@@ -349,11 +364,6 @@ CREATE TABLE book_tables(
 --    FOREIGN KEY(c_id) references cancellations on delete set null
    
 -- );
-
-
-
-
-
 
 
 

@@ -1,0 +1,10 @@
+coupon_id,coupon_txt,coupon_type,availability,start_date,end_date
+1,'Free Discount','free',2,'2012-09-22','2013-09-22'
+2,'Bug 2 get 1','premium',9,'2012-12-19','2013-12-19'
+3,'Bug 2 get 1','free',5,'2012-01-12','2013-10-22'
+4,'Free Discount','free',1,'2012-10-22','2013-10-22'
+5,'Bug 2 get 1','free',9,'2012-10-22','2013-12-19'
+6,'Bug 2 get 1','free',1,'2012-09-22','2013-10-22'
+7,'50 discount','free',2,'2012-10-22','2013-10-22'
+8,'Bug 2 get 1','premium',1,'2012-09-22','2013-01-12'
+9,'Bug 2 get 1','free',3,'2012-12-19','2013-10-22'
