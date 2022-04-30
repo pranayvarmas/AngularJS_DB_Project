@@ -3,25 +3,25 @@
 
     <div class="section-title" data-aos="fade-in" data-aos-delay="100">
       <h2>Signup</h2>
-      <!-- {/* <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p> */} -->
-    </div>
+      </div>
 
 <div [hidden]="submitted">
   <div class="row">
+    <div class="col-sm"></div>
     <div class="col align-items-stretch mb-5 mb-lg-3">
       <div class="icon-box rowc" data-aos="fade-up">
       <form (ngSubmit)="signUp()" role="form" class="php-email-form">
         <div class="row">
           <div class="form-group mt-3">
-          <input type="text" class="form-control" id="email" required
-          [(ngModel)]="person.email" name="email" placeholder="Email">
+          <input type="email" class="form-control" id="email" required
+          [(ngModel)]="person.email" name="email" placeholder="Email" required>
         </div>
       </div>
 
 
         <div class="row">
           <div class="form-group mt-3">
-            <input type="text" class="form-control" id="password" required
+            <input type="password" class="form-control" id="password" required
               [(ngModel)]="person.password" name="password" placeholder="Password">
           </div>
         </div>
@@ -36,8 +36,19 @@
 
         <div class="row">
           <div class="form-group mt-3">
-          <input type="text" class="form-control" id="type" required
-          [(ngModel)]="person.person_type" name="type"  placeholder="Role">
+            <label for ="person_type" style="color: black; font-size:medium">Role:&nbsp;&nbsp;</label>
+            <select name="person_type" id="person_type" [(ngModel)]="person.person_type">
+              <option style="font-size: medium" value="General Manager">General Manager</option>
+              <option style="font-size: medium"value="Super User">Super User</option>
+              <option style="font-size: medium"value="Base Customer">Base Customer</option>
+              <option style="font-size: medium"value="Premium Customer">Premium Customer</option>
+              <option style="font-size: medium"value="Kitchen Manager">Kitchen Manager</option>
+              <option style="font-size: medium"value="Billing Manager">Billing Manager</option>
+              <option style="font-size: medium"value="Delivery Manager">Delivery Manager</option>
+              <option style="font-size: medium"value="Chef">Chef</option>
+              <option style="font-size: medium"value="Delivery Person">Delivery Person</option>
+              <option style="font-size: medium"value="Food Server">Food Server</option>
+            </select>
         </div>
         </div>
         <div class="row">
@@ -56,8 +67,21 @@
 
         <div class="row">
           <div class="form-group mt-3">
-          <input type="number" class="form-control" id="address" required
-          [(ngModel)]="person.address" name="address" placeholder="Address">
+            <label for ="address" style="color: black; font-size:medium">Address:&nbsp;&nbsp;</label>
+            <select name="address" id="address" [(ngModel)]="person.address">
+              <option style="font-size: medium" value="1">Woking</option>
+              <option style="font-size: medium"value="2">Edinburg</option>
+              <option style="font-size: medium"value="3">Brimingam</option>
+              <option style="font-size: medium"value="4">Thaiteo</option>
+              <option style="font-size: medium"value="5">Liverpool</option>
+              <option style="font-size: medium"value="6">Sheffield</option>
+              <option style="font-size: medium"value="7">Leeds</option>
+              <option style="font-size: medium"value="8">Plymouth</option>
+              <option style="font-size: medium"value="9">Belmath</option>
+              <option style="font-size: medium"value="10">Cardiff</option>
+            </select>
+          <!-- <input type="number" class="form-control" id="address" required -->
+           <!-- name="address" placeholder="Address"> -->
         </div>
         </div>
 
@@ -67,23 +91,25 @@
           [(ngModel)]="person.phone_no" name="phone_no" placeholder="Phone No">
         </div>
         </div>
-
-        <div class="row">
-          <div class="form-group mt-3">
-          <input type="number" class="form-control" id="salary" required
-          [(ngModel)]="person.salary" name="salary" placeholder="Salary">
-        </div>
-        </div>
+        <!-- </div> -->
         <br>
         <div class="text-center"><button class="about-btn" type="submit">Submit</button></div>
-
+        <br>
+        <div class="text-center"><p style="color: red; font-size: medium;">{{msg}}</p></div>
       </form>
+
+  </div>
+  </div>
+  <div class="col-sm"></div>
+  </div>
   </div>
 
   <div [hidden]="!submitted">
-      <h4>Signup successfully!</h4>
+    <div class="text-center"><p style="color: green; font-size: medium;">Success</p></div>
       <div class="btn-group">
         <!-- <button class="btn btn-primary" (click)="goBack()">Back</button> -->
         <!-- <button class="btn btn-success" (click)="submitted=false">Edit</button> -->
       </div>
+  </div>
+  </div>
   </div>

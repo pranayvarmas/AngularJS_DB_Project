@@ -7,11 +7,11 @@ import { ChartConfiguration } from 'chart.js';
 import { ChartType } from 'ng-apexcharts';
 
 @Component({
-  selector: 'app-item-analytics',
-  templateUrl: './item-analytics.component.html',
-  styleUrls: ['./item-analytics.component.css']
+  selector: 'app-analytics2',
+  templateUrl: './analytics2.component.html',
+  styleUrls: ['./analytics2.component.css']
 })
-export class ItemAnalyticsComponent implements OnInit {
+export class Analytics2Component implements OnInit {
   items: Item[]=[]
   uItems: Item[]=[]
   x="";
@@ -50,14 +50,14 @@ export class ItemAnalyticsComponent implements OnInit {
 
 //Initializing Primary X Axis
 
-  getAnalytics1() {
+  getAnalytics2() {
     return this.dataService.getAnalytics1()
     .then(response => {
       var y=JSON.parse(JSON.stringify(response));
       this.out1=y.data;
       console.log(this.out1);
       for(var k=0; k<this.out1.length; k++){
-        var t=this.out1[k]['avg'];
+        var t=this.out1[k]['rating'];
         if(t>=0 && t<1){
           this.x1=this.x1+1;
         }
@@ -88,7 +88,7 @@ export class ItemAnalyticsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginService.checkLoginFromDashboard();
-     this.getAnalytics1();
+     this.getAnalytics2();
   }
 
 

@@ -31,6 +31,21 @@ import { ItemDetailsComponent } from './item-details/item-details.component';
 import { DpFeedbackComponent } from './dp-feedback/dp-feedback.component';
 import { ItemFeedbackComponent } from './item-feedback/item-feedback.component';
 import { ItemAnalyticsComponent } from './item-analytics/item-analytics.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { ShowCouponsComponent } from './show-coupons/show-coupons.component';
+import { ShowTablesComponent } from './show-tables/show-tables.component';
+import { ShowPersonsComponent } from './show-persons/show-persons.component';
+import { ShowIngredientsComponent } from './show-ingredients/show-ingredients.component';
+import { ShowOfflineOrdersComponent } from './show-offline-orders/show-offline-orders.component';
+import { BookingTablesComponent } from './booking-tables/booking-tables.component';
+import { SettingsComponent } from './settings/settings.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { NgChartsModule } from 'ng2-charts';
+import { Analytics2Component } from './analytics2/analytics2.component';
+import { Analytics3Component } from './analytics3/analytics3.component';
+import { Analytics4Component } from './analytics4/analytics4.component';
+
 
 @NgModule({
   declarations: [
@@ -52,7 +67,20 @@ import { ItemAnalyticsComponent } from './item-analytics/item-analytics.componen
     ItemDetailsComponent,
     DpFeedbackComponent,
     ItemFeedbackComponent,
-    ItemAnalyticsComponent
+    ItemAnalyticsComponent,
+    ForgotPasswordComponent,
+    AdminDashboardComponent,
+    ShowCouponsComponent,
+    ShowTablesComponent,
+    ShowPersonsComponent,
+    ShowIngredientsComponent,
+    ShowOfflineOrdersComponent,
+    BookingTablesComponent,
+    SettingsComponent,
+    Analytics2Component,
+    Analytics3Component,
+    Analytics4Component
+
   ],
   imports: [
     BrowserModule,
@@ -60,6 +88,9 @@ import { ItemAnalyticsComponent } from './item-analytics/item-analytics.componen
     HttpModule,
     AppRoutingModule,
     HttpClientModule,
+    NgApexchartsModule,
+    NgChartsModule
+    // ChartsModule
     // CookieService
   ],
   providers: [DataService, LoginService],

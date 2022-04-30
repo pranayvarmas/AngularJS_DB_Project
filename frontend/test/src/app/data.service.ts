@@ -47,9 +47,9 @@ export class DataService {
                   }})
                .catch(this.handleError);
   }
-  getItemAnalytics(): Promise<string> {
+  getAnalytics1(): Promise<string> {
     console.log(this.headers);
-    const url = `${this.customersUrl}itemanalytics`;
+    const url = `${this.customersUrl}analytics1`;
     return this.http.get(url, {headers:this.headers})
                .toPromise()
                .then(response => {
@@ -57,7 +57,52 @@ export class DataService {
                     return response.json();
                   }
                   else{
-                    console.log("ItemAnalytics Error");
+                    console.log("Analytics1 Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+  getAnalytics2(): Promise<string> {
+    console.log(this.headers);
+    const url = `${this.customersUrl}analytics2`;
+    return this.http.get(url, {headers:this.headers})
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Analytics2 Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+  getAnalytics3(): Promise<string> {
+    console.log(this.headers);
+    const url = `${this.customersUrl}analytics3`;
+    return this.http.get(url, {headers:this.headers})
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Analytics3 Error");
+                    return {};
+                  }})
+               .catch(this.handleError);
+  }
+  getAnalytics4(): Promise<string> {
+    console.log(this.headers);
+    const url = `${this.customersUrl}analytics4`;
+    return this.http.get(url, {headers:this.headers})
+               .toPromise()
+               .then(response => {
+                  if(response!=undefined){
+                    return response.json();
+                  }
+                  else{
+                    console.log("Analytics4 Error");
                     return {};
                   }})
                .catch(this.handleError);
@@ -134,12 +179,12 @@ export class DataService {
   }
   getFreeTables(dt:Date): Promise<string> {
     const url = `${this.customersUrl}booking-tables/${dt}`;
-    
+
     return this.http.get(url)
                .toPromise()
                .then(response => {
                   if(response!=undefined){
-                    
+
                     return response.json();
                   }
                   else{
@@ -150,12 +195,12 @@ export class DataService {
   }
   getBookedTables(id:number): Promise<string> {
     const url = `${this.customersUrl}booked-tables/${id}`;
-    
+
     return this.http.get(url)
                .toPromise()
                .then(response => {
                   if(response!=undefined){
-                    
+
                     return response.json();
                   }
                   else{
@@ -163,7 +208,7 @@ export class DataService {
                     return {};
                   }})
                .catch(this.handleError);
-  }      
+  }
   BookTable(booktable:Booktable): Promise<string> {
     const url = `${this.customersUrl}add-booking-tables`;
     console.log(url);
@@ -195,7 +240,7 @@ export class DataService {
                     return {};
                   }})
                .catch(this.handleError);
-  }   
+  }
   getOfflineOrderDetails(id:number): Promise<string> {
     const url = `${this.customersUrl}offlineorders/details/${id}`;
     return this.http.get(url, {headers:this.headers})
@@ -209,7 +254,7 @@ export class DataService {
                     return {};
                   }})
                .catch(this.handleError);
-  }   
+  }
   getOrders(id:number): Promise<string> {
     const url = `${this.customersUrl}orders/${id}`;
     return this.http.get(url, {headers:this.headers})

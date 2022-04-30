@@ -54,6 +54,14 @@ export class DpDetailsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    var type=this.cookie.get('person_type');
+    if(type=="Delivery Manager" || type=="General Manager"){
+
+    }
+    else{
+      alert("Invalid Page");
+      window.location.href='/';
+    }
     this.route.params
     .subscribe((params: Params) => {
       this.id=params['id'];

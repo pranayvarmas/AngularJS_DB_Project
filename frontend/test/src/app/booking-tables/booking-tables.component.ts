@@ -39,7 +39,7 @@ export class BookingTablesComponent implements OnInit {
   showBookTable(id:number){
     var i=new Table;
     this.uTables=this.tables;
-    
+
     var j;
     for(var k=0; k<this.uTables.length; k++){
       if(this.uTables[k].table_id==id){
@@ -74,7 +74,7 @@ export class BookingTablesComponent implements OnInit {
     // this.showBox=false;
   }
 
-  
+
   getFreeTables() {
     return this.dataService.getFreeTables(this.currentdate).then( tables => this.x = tables)
     .then(response => {
@@ -107,9 +107,18 @@ export class BookingTablesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    var type=this.cookie.get('person_type');
+    if(type=="Base Customer" || type=="Premium Customer" ){
+
+    }
+    else{
+      alert("Invalid Page");
+      window.location.href='/';
+    }
      this.getFreeTables();
      this.getBookedTables();
+
   }
-  
+
 
 }

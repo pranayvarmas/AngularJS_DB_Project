@@ -431,18 +431,81 @@ app.post('/item_feedback', function(req, res, next){
         console.log("error rolling back");
     })
 })
-
-app.post('/signup', function(req, res, next){
-    var token=req.header('Authorization').replace('Bearer ', '');
-    let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    var verified=jwt.verify(token, jwtSecretKey);
-    if(verified){
-    }
-    else{
+app.get('/analytics1', function(req, res, next){
+    var q="select item_id,avg(rating) from item_feedback group by item_id order by item_id;";
+    client.query("begin")
+    .then(res1 =>{
+        return client.query(q);
+    })
+    .then(res2 =>{
         res.send({
-            success:false
+            success:true,
+            data:res2.rows
         })
-    }
+        return client.query("commit");
+    })
+    .catch((err) =>{
+        console.log(err);
+        return client.query("rollback");
+    })
+    .catch((err) =>{
+        console.log("error rolling back");
+    })
+})
+
+app.get('/analytics2', function(req, res, next){
+    var q="select dp_id,round(avg(rating),2) as rating from dp_feedback group by dp_id order by dp_id;";
+    client.query("begin")
+    .then(res1 =>{
+        return client.query(q);
+    })
+    .then(res2 =>{
+        res.send({
+            success:true,
+            data:res2.rows
+        })
+        return client.query("commit");
+    })
+    .catch((err) =>{
+        console.log(err);
+        return client.query("rollback");
+    })
+    .catch((err) =>{
+        console.log("error rolling back");
+    })
+})
+app.get('/analytics3', function(req, res, next){
+    var q="select foo.order_date, foo.item_id, foo.item_name, sum(foo.total) as total from ( select items.item_id , item_name, offline_orders.order_date, sum(offline_items.quantity ) as total from items,offline_orders, offline_items  where items.item_id=offline_items.item_id and  offline_items.off_order_id=offline_orders.off_order_id group by offline_orders.order_date,items.item_id  union select items.item_id, item_name, online_orders.order_date, sum(online_items.quantity ) as total from items,online_orders, online_items where items.item_id=online_items.item_id and  online_items.on_order_id=online_orders.on_order_id group by online_orders.order_date,items.item_id) as foo group by foo.order_date,item_id,item_name order by foo.order_date,total desc;"
+    client.query("begin")
+    .then(res1 =>{
+        return client.query(q);
+    })
+    .then(res2 =>{
+        res.send({
+            success:true,
+            data:res2.rows
+        })
+        return client.query("commit");
+    })
+    .catch((err) =>{
+        console.log(err);
+        return client.query("rollback");
+    })
+    .catch((err) =>{
+        console.log("error rolling back");
+    })
+})
+app.post('/signup', function(req, res, next){
+    // var token=req.header('Authorization').replace('Bearer ', '');
+    // let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    // var verified=jwt.verify(token, jwtSecretKey);
+    // if(verified){
+    // }
+    // else{
+    //     res.send({
+    //         success:false
+    //     })
+    // }
     var inp=req.body;
     q=mysql.format("insert into persons(person_name, person_type, type_from, type_to, address, phone_no, salary, email, password) values(?, ?, ?, ?, ?, ?, ?, ?, ?);", [inp['person_name'], inp['person_type'], inp['type_from'], inp['type_to'], inp['address'], inp['phone_no'], inp['salary'], inp['email'], inp['password']]);
     // q1=mysql.format("update online_orders set item_feedback=true where on_order_id=?", inp['on_order_id']);
@@ -698,7 +761,7 @@ app.get('/get_est_time/:id', function(req, res) {
         return client.query(q);
     })
     .then(res2 =>{
-        if(res1.rows.length==0){
+        if(res2.rows.length==0){
             res.send({
                 success:true,
                 adrExists:false,
@@ -709,8 +772,8 @@ app.get('/get_est_time/:id', function(req, res) {
         return client.query(q1);
     })
     .then(res3 =>{
-        if(res2.rows.length!=0){
-            dp_id=res2.rows[0];
+        if(res3.rows.length!=0){
+            dp_id=res3.rows[0];
             q2=mysql.format("update delivery_persons set availability=False where dp_id=?", dp_id['dp_id']);
             po=1;
         }

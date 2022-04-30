@@ -16,10 +16,15 @@ export class LoginComponent implements OnInit {
   submitted = false;
   x="";
   email="";
+  msg="";
   password="";
   constructor(private dataService: DataService, private cookie: CookieService, private loginService: LoginService) {}
 
   checkPerson() {
+    if(this.email=="" || this.password==""){
+      this.msg="Please enter both email and password";
+      return;
+    }
      return this.dataService.checkPerson(this.email, this.password).then(person => this.x = person)
      .then (response =>{
        var y=JSON.parse(JSON.stringify(response));
@@ -34,7 +39,7 @@ export class LoginComponent implements OnInit {
           this.submitted=true;
           var date = new Date();
           // date.setTime(date.getTime()+(10*60*1000));
-          date.setTime(date.getTime()+(100*60*1000));
+          date.setTime(date.getTime()+(10*60*1000));
           this.cookie.set( 'person_id', y.data[0]['person_id'].toString(), date);
           this.cookie.set( 'person_name', y.data[0]['person_name'].toString(), date);
           this.cookie.set( 'person_type', y.data[0]['person_type'].toString(), date);
@@ -45,7 +50,13 @@ export class LoginComponent implements OnInit {
           this.cookie.set( 'salary', y.data[0]['salary'].toString(), date);
           this.cookie.set( 'email', y.data[0]['email'].toString(), date);
           this.cookie.set( 'token', y.token, date);
-          window.location.href="/dashboard";
+          if(this.cookie.get('person_type')=="Free Customer" || this.cookie.get('person_type')=="Premium Customer"){
+            window.location.href="/dashboard";
+          }
+          else{
+            window.location.href="/admin-dashboard";
+          }
+
        }
      })
   }

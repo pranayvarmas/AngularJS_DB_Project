@@ -11,8 +11,10 @@ import { LoginService } from '../login.service';
 })
 export class ShowItemsComponent implements OnInit {
   items: Item[]=[]
+  items1:Item[]=[]
   uItems: Item[]=[]
   x="";
+  showed=false;
   showitem=false;
   uItem=new Item;
   showBox=false;
@@ -55,7 +57,25 @@ export class ShowItemsComponent implements OnInit {
     })
     // this.showBox=false;
   }
-
+  show_all(){
+    this.items1=this.items;
+  }
+  show_f(){
+    this.items1=[];
+    for(var k=0; k<this.items.length; k++){
+      if(this.items[k]['item_type']=="food"){
+        this.items1.push(this.items[k]);
+      }
+    }
+  }
+  show_b(){
+    this.items1=[];
+    for(var k=0; k<this.items.length; k++){
+      if(this.items[k]['item_type']=="bevarage"){
+        this.items1.push(this.items[k]);
+      }
+    }
+  }
   deleteItem(id:number){
     this.dataService.deleteItem(id)
     .then(response =>{
@@ -75,6 +95,7 @@ export class ShowItemsComponent implements OnInit {
       var y=JSON.parse(JSON.stringify(response));
       if(y.itemsExists==true){
         this.items=y.data;
+        this.items1=this.items;
       }
       else if(y.itemsExists==false){
         alert("No Items are available");
@@ -100,6 +121,10 @@ export class ShowItemsComponent implements OnInit {
   ngOnInit(): void {
     this.loginService.checkLoginFromDashboard();
      this.getItems();
+     var d=this.cookie.get('person_type');
+     if(d=="Kitchen Manager" || d=="General Manager" || d=="Super User"){
+       this.showed=true;
+     }
   }
 
 

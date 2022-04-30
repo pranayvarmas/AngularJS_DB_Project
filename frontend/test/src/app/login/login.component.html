@@ -7,43 +7,49 @@
     </div>
 <div [hidden]="submitted">
         <div class="row">
-          <div class="col align-items-stretch mb-5 mb-lg-3">
+          <div class="col-sm"></div>
+          <div class="col-sm align-items-stretch mb-5 mb-lg-3">
             <div class="icon-box rowc" data-aos="fade-up">
               <form (ngSubmit)="checkPerson()" role="form" class="php-email-form">
+                <!-- <br> -->
               <div class="row">
-                <div class="form-group mt-3">
-                  <!-- <label for="email">Email</label> -->
+
+                <div class="form-group mt-3 col-sm">
+                  <label style="color: black" for="email">Email</label>
                   <input type="text" class="form-control" id="email" placeholder="Email" required
                   [(ngModel)]="email" name="email">
                 </div>
-              </div>
 
+              </div>
+              <!-- <br> -->
 
               <div class="row">
                 <div class="form-group mt-3">
-                  <!-- <label for="password">Password</label> -->
+                  <label style="color: black" for="email">Password</label>
                   <input type="text" class="form-control" id="password" placeholder="Password" required
                   [(ngModel)]="password" name="password">
                 </div>
               </div>
+              <a routerLink="/forgot" role="button" style="font-size: small" routerLinkActive="active">&nbsp;&nbsp;Forgot Password?</a>
+              <br>
+              <!-- <br> -->
               <br>
               <div class="text-center"><button class="about-btn" type="submit">Login</button></div>
+              <br>
+              <div class="text-center"><p style="color: red; font-size: medium;">{{msg}}</p></div>
+
     </form>
   </div>
   </div>
+  <div class="col-sm"></div>
   </div>
   </div>
 
   <div [hidden]="!submitted">
-    <!-- <h4>Update successfully!</h4>
-    <div class="btn-group"> -->
-                <br>
-                <h3>Loading...</h3>
-                <br>
+    <div class="text-center"><p style="color: green; font-size: medium;">Success</p></div>
+</div>
+</div>
+</div>
 
-    <!-- </div> -->
-</div>
-</div>
-</div>
 
 

@@ -15,11 +15,15 @@ export class SignupComponent implements OnInit {
   person = new Person();
   submitted = false;
   x="";
+  msg="";
   email="";
   password="";
   constructor(private dataService: DataService, private cookie: CookieService, private loginService: LoginService) {}
 
   signUp(){
+    if(this.person.person_name=="" || this.person.person_type=="" || this.person.email=="" || this.person.password=="" || this.person.address=="" || this.person.phone_no==""){
+      this.msg="Please enter all the details";
+    }
     this.dataService.signUp(this.person)
     .then(response =>{
       var y=JSON.parse(JSON.stringify(response));

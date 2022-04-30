@@ -41,7 +41,7 @@ export class AddCouponsComponent implements OnInit {
     }
     else{
       alert("Invalid Page");
-      window.location.replace("/dashboard");
+      window.location.href='/';
     }
   }
 

@@ -7,21 +7,24 @@ import { ChartConfiguration } from 'chart.js';
 import { ChartType } from 'ng-apexcharts';
 
 @Component({
-  selector: 'app-item-analytics',
-  templateUrl: './item-analytics.component.html',
-  styleUrls: ['./item-analytics.component.css']
+  selector: 'app-analytics3',
+  templateUrl: './analytics3.component.html',
+  styleUrls: ['./analytics3.component.css']
 })
-export class ItemAnalyticsComponent implements OnInit {
+export class Analytics3Component implements OnInit {
   items: Item[]=[]
   uItems: Item[]=[]
+  date:any;
   x="";
+  left:number[]=[]
+  right:number[]=[];
   x1=1;x2=1;x3=0;x4=0;x5=0;
   // showitem=false;
   uItem=new Item;
   showBox=false;
   out1:any;
   // chartData:any;
-  labels: string[]=['0-1', '1-2', '2-3', '3-4', '4-5'];
+  labels=this.left;
   public lineChartData: ChartConfiguration['data'] | undefined;
   public lineChartOptions: ChartConfiguration['options']={
     elements:{
@@ -33,13 +36,13 @@ export class ItemAnalyticsComponent implements OnInit {
       x:{
         title:{
           display:true,
-          text:'Rating'
+          text:'Quantity'
         }
       },
       y:{
         title:{
           display:true,
-          text:'Users with rating'
+          text:'Items sold'
         }
       }
     }
@@ -50,33 +53,24 @@ export class ItemAnalyticsComponent implements OnInit {
 
 //Initializing Primary X Axis
 
-  getAnalytics1() {
+  getAnalytics3() {
     return this.dataService.getAnalytics1()
     .then(response => {
       var y=JSON.parse(JSON.stringify(response));
       this.out1=y.data;
       console.log(this.out1);
-      for(var k=0; k<this.out1.length; k++){
-        var t=this.out1[k]['avg'];
-        if(t>=0 && t<1){
-          this.x1=this.x1+1;
-        }
-        else if(t>=1 && t<2){
-          this.x2=this.x2+1;
-        }
-        else if(t>=2 && t<3){
-          this.x3=this.x3+1;
-        }else if(t>=3 && t<4){
-          this.x4=this.x4+1;
-        }else if(t>=4 && t<=5){
-          this.x5=this.x5+1;
-        }
+      for (var k=0; k<this.out1.length; k++){
+        this.date=this.out1[k]['order_date'];
+        var u=this.out1[k]['item_name'];
+        this.left.push(u);
+        this.right.push(this.out1[k]['total']);
+
       }
       this.lineChartData={
         datasets:[
           {
-          data:[this.x1, this.x2, this.x3, this.x4, this.x5],
-          label: "Users with rating",
+          data:this.right,
+          label: "Items Quantity",
           pointRadius:1,
           },
         ],
@@ -88,7 +82,7 @@ export class ItemAnalyticsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginService.checkLoginFromDashboard();
-     this.getAnalytics1();
+     this.getAnalytics3();
   }
 
 

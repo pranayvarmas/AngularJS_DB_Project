@@ -37,6 +37,14 @@ export class AddItemsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    var type=this.cookie.get('person_type');
+    if(type=="Kitchen Manager" || type=="SuperUser" || type=="General Manager"){
+
+    }
+    else{
+      alert("Invalid Page");
+      window.location.href='/';
+    }
   }
 
 }

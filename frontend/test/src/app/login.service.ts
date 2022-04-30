@@ -39,7 +39,12 @@ export class LoginService {
     else{
       // console.log(this.cookie.get('person_id'));
       console.log("Cookie there");
-      window.location.href='/dashboard';
+      if(this.cookie.get('person_type')=="Free Customer" || this.cookie.get('person_type')=="Premium Customer"){
+        window.location.href='/dashboard';
+      }
+      else{
+        window.location.href='/admin-dashboard';
+      }
     }
   }
 

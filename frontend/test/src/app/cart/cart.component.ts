@@ -97,6 +97,14 @@ export class CartComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    var type=this.cookie.get('person_type');
+    if(type=="Base Customer" || type=="Premium Customer"){
+
+    }
+    else{
+      alert("Invalid Page");
+      window.location.href='/';
+    }
     this.loginService.checkLoginFromDashboard();
      this.getCart();
   }
